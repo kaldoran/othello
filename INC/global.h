@@ -22,7 +22,7 @@
 /* Permet d'obtenir la position d'un pion 
  * Converti un couple ROW, COLUMN en une case
  */
-#define SQUARE(ROW, COLUMN) (ROW + W_SIDE * COLUMN)
+#define SQUARE(ROW, COLUMN) (ROW + (W_SIDE - 1) * COLUMN)
 
 /* Inverse les joueur */
 #define SWITCH_PLAYER(PLAYER) ((PLAYER == PAWN_J1) ? PAWN_J2 : PAWN_J1)

@@ -5,7 +5,7 @@
 
 /* Verifie seulement si le coup est possible
  */
-#define check_only(OTHELLO, PLAYER)          \
+#define check_only(OTHELLO, POSITION, PLAYER)          \
                 good_move(OTHELLO, POSITION, PLAYER, 0)
                 
 /* Verifie si le coup est correct et retournes les pions 
@@ -32,9 +32,10 @@ Othello *new_othello() {
 	/* Positionnement des pions de bases */
 
 	othello->grid[mid] = PAWN_J2;
+	DEBUG_PRINTF("Value : %d\n", mid);
 	othello->grid[mid + 1] = PAWN_J1;
 
-	mid += W_SIDE;
+	mid += (W_SIDE - 1);
 	othello->grid[mid] = PAWN_J1;
 	othello->grid[mid + 1] = PAWN_J2;
 	
@@ -48,14 +49,6 @@ void videbuffer() {
   char videbuffer = 'a';
   while( (videbuffer=getchar()) != '\0' && videbuffer != '\n'); // on vide le buffer
 }
-
-/* Verifira si effectivement le coup est possible 
- */	
-int check_choice(Othello *othello, int position, char player) {
-	if ( position - 1 > GRID_SIZE )
-		return 0;
-	return 1;
-} 
 
 /* Récupere le coup sur STDIN
  * Et verifi simplement que le coup est dans la grille 
@@ -72,9 +65,8 @@ int othello_ask_choice(Othello *othello, char player) {
 		if ( (( row >= 'A' && row < 'A' + W_SIDE ) || ( row >= 'a' && row < 'a' + W_SIDE )) && column > 0 && column <= W_SIDE ) {
 			row = toupper(row) - 'A';
 			--column;
-			DEBUG_PRINTF("Value : %d %d - %d\n", (int)row, column, SQUARE(column, (int)row));
-			check_choice(othello, SQUARE((int)row ,column), player);
-			printf("Ok");
+			DEBUG_PRINTF("Value : %d %d - %d\n", (int)row, column, SQUARE(row, column));
+			printf("Move Ok ? %d\n", check_only(othello, SQUARE(row, column), player) );
 		}
 		
 		printf("Erreur : Entrez un nouveau coup : ");
@@ -95,20 +87,33 @@ int othello_ask_choice(Othello *othello, char player) {
  *		Et on ne s'arretepas au premier coup trouvé 
  */
 int good_move(Othello *othello, int position, char player, int return_or_not) {
+	
+	int i;
+	char inv_player = SWITCH_PLAYER(player);
 
-	char other_player = SWITCH_PLAYER(player);
+	/* Horizontal en partant sur la gauche */
+	if ( othello->grid[position - 1] == inv_player ) { /* Si la case juste a coté est un pion enemi, on part a l'avanture */
+		for( i = position - 1; i % W_SIDE != 0 && othello->grid[i] == inv_player; i--) 
+			; 
+		if ( othello->grid[i] != player ) return 1; 	
+	}
 	
 	
-	return 1;
+	return 0;
 }
 
 int move_left (Othello *othello, char player ) {
-	if ( othello->nb_pawn_p1 + othello->nb_pawn_p1 == GRID_SIZE ) 
-		return 1;
+
+	int column, line;
 	
+	if ( othello->nb_pawn_p1 + othello->nb_pawn_p1 == GRID_SIZE ) 
+		return 0;
+		
 	for ( column = 0; column < W_SIDE; column++) 
 		for ( line = 0; line < W_SIDE; line++) 
 			return check_only(othello, SQUARE(line, column),player);
+			
+	return 0; /* Normalement jamais atteind , c'est juste pour faire plaisir a GCC */
 }
 
 /* Mettre dans un fichier "affichage"
@@ -135,9 +140,9 @@ void print_othello(Othello *othello) {
     	
 	print_ligne();
 
-	for (i = 0; i < W_SIDE; i++) {
-		printf("%d |", i + 1);
-		for(j = 0; j < W_SIDE; j++) {
+	for (j = 0; j < W_SIDE; j++) {
+		printf("%d |", j + 1);
+		for(i = 0; i < W_SIDE; i++) {
 			if( (lettre = othello->grid[SQUARE(i,j)]) == PAWN_J1) printf("\033[30m %c \033[0m|", lettre);
 			else printf(" %c |", (lettre == PAWN_J2) ? lettre : lettre + 32 ); /* Lettre + 32 car 32 est le code ascii de l'espace */
 		}

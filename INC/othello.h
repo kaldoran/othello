@@ -5,6 +5,9 @@
 /*                                                                        */
 /* ---------------------------------------------------------------------- */
 
+
+
+/* FICHIER NON COMPLET */
 #ifndef OTHELLO_H
 #define OTHELLO_H
 
@@ -16,6 +19,7 @@
  */
 Othello *new_othello();
 
+int good_move(Othello *othello, int position, char player, int return_or_not);
 
 /* Affiche la grille d'othello
  */
