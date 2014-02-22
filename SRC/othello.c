@@ -91,12 +91,33 @@ int good_move(Othello *othello, int position, char player, int return_or_not) {
 	char inv_player = SWITCH_PLAYER(player);
 	DEBUG_PRINTF("%d %c\n" , position, player);
 	/* Horizontal en partant sur la gauche */
-	if ( othello->grid[position - 1] == inv_player ) { /* Si la case juste a coté est un pion enemi, on part a l'avanture */
-		for( i = position - 1; i % W_SIDE != 0 && othello->grid[i] == inv_player; i--) 
+	
+	if ( (i = position) % W_SIDE != 0 && othello->grid[--i] == inv_player ) { /* Si la case a gauche est enemi, on part a l'avanture */
+		for( ; i % W_SIDE != 0 && othello->grid[i] == inv_player; i--) 
+			; 
+		if ( othello->grid[i] == player ) return 1; 	
+	}
+
+	/* Horizontal en partant vers la droite */
+	if ( (i = position) % W_SIDE != 7 && othello->grid[++i] == inv_player ) { /* Si la case a droite est enemi, on part a l'avanture */
+		for(; i % W_SIDE != 7 && othello->grid[i] == inv_player; i++) 
 			; 
 		if ( othello->grid[i] == player ) return 1; 	
 	}
 	
+	/* Vertical en partant vers le haut */
+	if ( (i = position) < W_SIDE && othello->grid[i -= W_SIDE] == inv_player ) {
+		for(; i > 0 && othello->grid[i] == inv_player; i -= W_SIDE) 
+			; 
+		if ( othello->grid[i] == player ) return 1; 	
+	}
+	
+	/* Vertical en partant vers le bas */
+	if ( (i = position) < SQUARE(0, W_SIDE - 1) && othello->grid[i += W_SIDE] == inv_player ) {
+		for(; i < GRID_SIZE && othello->grid[i] == inv_player; i += W_SIDE) 
+			; 
+		if ( othello->grid[i] == player ) return 1; 	
+	}
 	
 	return 0;
 }
