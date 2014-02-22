@@ -148,7 +148,7 @@ int good_move(Othello *othello, int position, char player, int return_or_not) {
 			return 1;
 		}	
 	}
-	
+	DEBUG_PRINTF("%d\n", SQUARE(0, W_SIDE - 1));
 	/* Vertical en partant vers le bas */
 	if ( (i = position) < SQUARE(0, W_SIDE - 1) && othello->grid[i += W_SIDE] == inv_player ) {
 		for(; i < GRID_SIZE && othello->grid[i] == inv_player; i += W_SIDE) 
