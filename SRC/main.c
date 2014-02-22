@@ -9,10 +9,10 @@ int main() {
 
 	othello = new_othello(); /* Crée un nouvelle othello */
 	print_othello(othello);  /* Affichage de l'othello */
-	
-	othello_ask_choice(othello, 'X');
+
+	printf("%d", othello_ask_choice(othello, 'X'));
 	/* Il a free il a tout compris */
+	free(othello->grid);
 	free(othello);
-	
 	return 1;
 }

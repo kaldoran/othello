@@ -17,27 +17,31 @@ Othello *new_othello() {
 
 	Othello *othello;
 	int mid = 0, val = 0;
-	
+
 	if ((othello = calloc(1, sizeof *othello)) == NULL)
 		QUIT_MSG("Erreur : Probleme d'allocation de la structure de l'othello");
-
+		
+	if((othello->grid = calloc(GRID_SIZE, sizeof(char))) == NULL) {
+		free(othello);
+		QUIT_MSG("Erreur : Probleme d'allocation du tableau de l'othello");
+	}
+	
 	/* Initialisation */
 	othello->nb_pawn_p1 = othello->nb_pawn_p2 = 2;
-	memset(othello->grid, 0, sizeof *othello); 
 
 	/* Calcul du milieu de grille */
 	val = W_SIDE / 2 - 1;
 	mid = SQUARE(val, val);
 
 	/* Positionnement des pions de bases */
-
+	
 	othello->grid[mid] = PAWN_J2;
 	othello->grid[mid + 1] = PAWN_J1;
 
 	mid += W_SIDE;
 	othello->grid[mid] = PAWN_J1;
 	othello->grid[mid + 1] = PAWN_J2;
-	
+
 	return othello;
 }
 
@@ -55,6 +59,7 @@ void videbuffer() {
 int othello_ask_choice(Othello *othello, char player) {
 	int column = 0;
 	char row = ' ';
+	if ( ! move_left(othello, player) ) return 0;
 	
 	printf("%c ou voulez vous jouer ? ", player);
 	while(1) {
@@ -65,7 +70,8 @@ int othello_ask_choice(Othello *othello, char player) {
 			row = toupper(row) - 'A';
 			--column;
 			DEBUG_PRINTF("Value : %d %d - %d\n", (int)row, column, SQUARE((int)row, column));
-			printf("Move Ok ? %d\n", check_only(othello, SQUARE((int)row, column), player) );
+			if(check_only(othello, SQUARE((int)row, column), player) )
+				return 1;
 		}
 		
 		printf("Erreur : Entrez un nouveau coup : ");
@@ -89,7 +95,7 @@ int good_move(Othello *othello, int position, char player, int return_or_not) {
 	
 	int i;
 	char inv_player = SWITCH_PLAYER(player);
-	DEBUG_PRINTF("%d %c\n" , position, player);
+
 	/* Horizontal en partant sur la gauche */
 	
 	if ( (i = position) % W_SIDE != 0 && othello->grid[--i] == inv_player ) { /* Si la case a gauche est enemi, on part a l'avanture */
@@ -124,14 +130,14 @@ int good_move(Othello *othello, int position, char player, int return_or_not) {
 
 int move_left (Othello *othello, char player ) {
 
-	int column, line;
+	int i;
 	
-	if ( othello->nb_pawn_p1 + othello->nb_pawn_p1 == GRID_SIZE ) 
+	if ( othello->nb_pawn_p1 + othello->nb_pawn_p2 == GRID_SIZE ) 
 		return 0;
 		
-	for ( column = 0; column < W_SIDE; column++) 
-		for ( line = 0; line < W_SIDE; line++) 
-			return check_only(othello, SQUARE(line, column),player);
+	for ( i = 0; i < GRID_SIZE; i++ ) 
+		if ( check_only(othello, i,player) ) 
+				return 1;
 			
 	return 0; /* Normalement jamais atteind , c'est juste pour faire plaisir a GCC */
 }

@@ -13,7 +13,7 @@ typedef struct Othello {
 	unsigned int nb_pawn_p1;
 	unsigned int nb_pawn_p2;
 
-	char grid[GRID_SIZE];
+	char *grid;
 } Othello;
 
 
