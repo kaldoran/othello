@@ -8,9 +8,14 @@ int main() {
 	Othello *othello;
 
 	othello = new_othello(); /* Crée un nouvelle othello */
-	print_othello(othello);  /* Affichage de l'othello */
+	char player = 'X';
 
-	printf("%d", othello_ask_choice(othello, 'X'));
+	while(1) {
+		print_othello(othello);  /* Affichage de l'othello */
+		othello_ask_choice(othello, player);
+		player = SWITCH_PLAYER(player);
+	}	
+	print_othello(othello);  /* Affichage de l'othello */
 	/* Il a free il a tout compris */
 	free(othello->grid);
 	free(othello);

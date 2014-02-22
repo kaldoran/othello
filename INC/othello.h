@@ -19,7 +19,7 @@
  */
 Othello *new_othello();
 
-void videbuffer();
+int videbuffer();
 
 int othello_ask_choice(Othello *othello, char player);
 

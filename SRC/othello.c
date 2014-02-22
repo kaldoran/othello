@@ -48,9 +48,10 @@ Othello *new_othello() {
 /* Vide le buffer
  * a deplacer dans un fichier global
  */
-void videbuffer() {
+int videbuffer() {
   char videbuffer = 'a';
-  while( (videbuffer=getchar()) != '\0' && videbuffer != '\n'); // on vide le buffer
+  while( (videbuffer = getchar()) != '\0' && videbuffer != '\n'); // on vide le buffer
+  return 1;
 }
 
 /* Récupere le coup sur STDIN
@@ -59,7 +60,8 @@ void videbuffer() {
 int othello_ask_choice(Othello *othello, char player) {
 	int column = 0;
 	char row = ' ';
-	if ( ! move_left(othello, player) ) return 0;
+	if ( ! move_left(othello, player) ) 
+		return 0;
 	
 	printf("%c ou voulez vous jouer ? ", player);
 	while(1) {
@@ -69,15 +71,22 @@ int othello_ask_choice(Othello *othello, char player) {
 		if ( (( row >= 'A' && row < 'A' + W_SIDE ) || ( row >= 'a' && row < 'a' + W_SIDE )) && column > 0 && column <= W_SIDE ) {
 			row = toupper(row) - 'A';
 			--column;
-			DEBUG_PRINTF("Value : %d %d - %d\n", (int)row, column, SQUARE((int)row, column));
-			if(check_only(othello, SQUARE((int)row, column), player) )
-				return 1;
+
+			if ( check_and_return(othello, SQUARE((int)row, column), player) )
+				return videbuffer();
 		}
 		
 		printf("Erreur : Entrez un nouveau coup : ");
 		videbuffer();
 	}
 	return 1;
+}
+
+Othello *change_value(Othello *othello, int position, char player) {
+	othello->grid[position] = player;
+	(player == PAWN_J1 ) ? othello->nb_pawn_p1++ : othello->nb_pawn_p2++;
+	
+	return othello;
 }
 
 /* Verifie si le coup est correct si return_or_not == 0
@@ -95,34 +104,63 @@ int good_move(Othello *othello, int position, char player, int return_or_not) {
 	
 	int i;
 	char inv_player = SWITCH_PLAYER(player);
-
+	DEBUG_PRINTF("%c - %d\n", player, position);
 	/* Horizontal en partant sur la gauche */
 	
 	if ( (i = position) % W_SIDE != 0 && othello->grid[--i] == inv_player ) { /* Si la case a gauche est enemi, on part a l'avanture */
 		for( ; i % W_SIDE != 0 && othello->grid[i] == inv_player; i--) 
 			; 
-		if ( othello->grid[i] == player ) return 1; 	
+		if ( othello->grid[i] == player ) {
+			if ( return_or_not ) {
+				for( ++i ; othello->grid[i] == inv_player; i++) 
+					othello = change_value(othello, i, player);
+				othello = change_value(othello, i, player);
+			}
+			return 1;
+		
+		} 	
 	}
 
 	/* Horizontal en partant vers la droite */
 	if ( (i = position) % W_SIDE != 7 && othello->grid[++i] == inv_player ) { /* Si la case a droite est enemi, on part a l'avanture */
 		for(; i % W_SIDE != 7 && othello->grid[i] == inv_player; i++) 
 			; 
-		if ( othello->grid[i] == player ) return 1; 	
+		if ( othello->grid[i] == player ) {
+			if ( return_or_not ) {
+				for( --i ; othello->grid[i] == inv_player; i--) 
+					othello = change_value(othello, i, player);
+				othello = change_value(othello, i, player);
+			} 
+			return 1; 
+		}
 	}
 	
 	/* Vertical en partant vers le haut */
 	if ( (i = position) < W_SIDE && othello->grid[i -= W_SIDE] == inv_player ) {
 		for(; i > 0 && othello->grid[i] == inv_player; i -= W_SIDE) 
 			; 
-		if ( othello->grid[i] == player ) return 1; 	
+		if ( othello->grid[i] == player ) {
+			if ( return_or_not ) {
+				for( i += W_SIDE; othello->grid[i] == inv_player; i += W_SIDE) 
+					othello = change_value(othello, i, player);
+				othello = change_value(othello, i, player);
+			} 
+			return 1;
+		}	
 	}
 	
 	/* Vertical en partant vers le bas */
 	if ( (i = position) < SQUARE(0, W_SIDE - 1) && othello->grid[i += W_SIDE] == inv_player ) {
 		for(; i < GRID_SIZE && othello->grid[i] == inv_player; i += W_SIDE) 
 			; 
-		if ( othello->grid[i] == player ) return 1; 	
+		if ( othello->grid[i] == player ) {
+			if ( return_or_not ) {
+				for( i -= W_SIDE ; othello->grid[i] == inv_player; i -= W_SIDE) 
+					othello = change_value(othello, i, player);
+				othello = change_value(othello, i, player);
+			} 
+			return 1;
+		}	
 	}
 	
 	return 0;
