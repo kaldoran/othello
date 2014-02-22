@@ -6,12 +6,12 @@
 /* Verifie seulement si le coup est possible
  */
 #define check_only(OTHELLO, PLAYER)          \
-                good_move(OTHELLO, PLAYER, 0)
+                good_move(OTHELLO, POSITION, PLAYER, 0)
                 
 /* Verifie si le coup est correct et retournes les pions 
  */
-#define check_and_return(OTHELLO, PLAYER)    \
-                good_move(OTHELLO, PLAYER, 1)
+#define check_and_return(OTHELLO, POSITION, PLAYER)    \
+                good_move(OTHELLO, POSITION, PLAYER, 1)
 
 Othello *new_othello() {
 
@@ -94,7 +94,11 @@ int othello_ask_choice(Othello *othello, char player) {
  *		on fait demi tour en inversant les pions
  *		Et on ne s'arretepas au premier coup trouvé 
  */
-int good_move(Othello *othello, char player, int return_or_not) {
+int good_move(Othello *othello, int position, char player, int return_or_not) {
+
+	char other_player = SWITCH_PLAYER(player);
+	
+	
 	return 1;
 }
 
@@ -104,7 +108,7 @@ int move_left (Othello *othello, char player ) {
 	
 	for ( column = 0; column < W_SIDE; column++) 
 		for ( line = 0; line < W_SIDE; line++) 
-			return good_move();
+			return check_only(othello, SQUARE(line, column),player);
 }
 
 /* Mettre dans un fichier "affichage"
