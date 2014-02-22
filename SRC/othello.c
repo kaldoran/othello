@@ -32,7 +32,6 @@ Othello *new_othello() {
 	/* Positionnement des pions de bases */
 
 	othello->grid[mid] = PAWN_J2;
-	DEBUG_PRINTF("Value : %d\n", mid);
 	othello->grid[mid + 1] = PAWN_J1;
 
 	mid += W_SIDE;
@@ -90,12 +89,12 @@ int good_move(Othello *othello, int position, char player, int return_or_not) {
 	
 	int i;
 	char inv_player = SWITCH_PLAYER(player);
-
+	DEBUG_PRINTF("%d %c\n" , position, player);
 	/* Horizontal en partant sur la gauche */
 	if ( othello->grid[position - 1] == inv_player ) { /* Si la case juste a coté est un pion enemi, on part a l'avanture */
 		for( i = position - 1; i % W_SIDE != 0 && othello->grid[i] == inv_player; i--) 
 			; 
-		if ( othello->grid[i] != player ) return 1; 	
+		if ( othello->grid[i] == player ) return 1; 	
 	}
 	
 	
