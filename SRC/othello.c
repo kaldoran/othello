@@ -33,9 +33,9 @@ Othello *new_othello() {
 
 	othello->grid[mid] = PAWN_J2;
 	DEBUG_PRINTF("Value : %d\n", mid);
+	othello->grid[mid + 1] = PAWN_J1;
 
-
-	mid += (W_SIDE - 1);
+	mid += W_SIDE;
 	othello->grid[mid] = PAWN_J1;
 	othello->grid[mid + 1] = PAWN_J2;
 	
