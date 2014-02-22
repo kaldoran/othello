@@ -3,6 +3,16 @@
 #include <ctype.h>
 #include "othello.h"
 
+/* Verifie seulement si le coup est possible
+ */
+#define check_only(OTHELLO, PLAYER)          \
+                good_move(OTHELLO, PLAYER, 0)
+                
+/* Verifie si le coup est correct et retournes les pions 
+ */
+#define check_and_return(OTHELLO, PLAYER)    \
+                good_move(OTHELLO, PLAYER, 1)
+
 Othello *new_othello() {
 
 	Othello *othello;
@@ -73,7 +83,29 @@ int othello_ask_choice(Othello *othello, char player) {
 	return 1;
 }
 
+/* Verifie si le coup est correct si return_or_not == 0
+ * I.E : Verifi si il trouve un pion enemie autour du pion qui vas etre jouer
+ * 			- Si un pion est trouvé on verifie toute la ligne
+ *			  Si un pion enemie est trouvé sur cette ligne on retourne 1
+ *			  Sinon on retourne 0
+ * Si return_or_not == 1
+ * 		Meme action que pour return_or_not == 0
+ *		Cependant au lieu de s'arreter en fin de ligne des qu'il rencontre un pion enemie
+ *		on fait demi tour en inversant les pions
+ *		Et on ne s'arretepas au premier coup trouvé 
+ */
+int good_move(Othello *othello, char player, int return_or_not) {
+	return 1;
+}
 
+int move_left (Othello *othello, char player ) {
+	if ( othello->nb_pawn_p1 + othello->nb_pawn_p1 == GRID_SIZE ) 
+		return 1;
+	
+	for ( column = 0; column < W_SIDE; column++) 
+		for ( line = 0; line < W_SIDE; line++) 
+			return good_move();
+}
 
 /* Mettre dans un fichier "affichage"
  */
