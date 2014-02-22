@@ -65,8 +65,8 @@ int othello_ask_choice(Othello *othello, char player) {
 		if ( (( row >= 'A' && row < 'A' + W_SIDE ) || ( row >= 'a' && row < 'a' + W_SIDE )) && column > 0 && column <= W_SIDE ) {
 			row = toupper(row) - 'A';
 			--column;
-			DEBUG_PRINTF("Value : %d %d - %d\n", (int)row, column, SQUARE(row, column));
-			printf("Move Ok ? %d\n", check_only(othello, SQUARE(row, column), player) );
+			DEBUG_PRINTF("Value : %d %d - %d\n", (int)row, column, SQUARE((int)row, column));
+			printf("Move Ok ? %d\n", check_only(othello, SQUARE((int)row, column), player) );
 		}
 		
 		printf("Erreur : Entrez un nouveau coup : ");

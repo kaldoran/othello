@@ -18,7 +18,7 @@
  * Ajout les pions au centre et initaliser les valeurs 
  */
 Othello *new_othello();
-
+int othello_ask_choice(Othello *othello, char player);
 int good_move(Othello *othello, int position, char player, int return_or_not);
 
 /* Affiche la grille d'othello

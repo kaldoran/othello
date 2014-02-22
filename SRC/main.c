@@ -12,7 +12,7 @@ int main() {
 	
 	othello_ask_choice(othello, 'X');
 	/* Il a free il a tout compris */
-	//free(othello);
+	free(othello);
 	
 	return 1;
 }
