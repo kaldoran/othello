@@ -96,10 +96,7 @@ void change_value(Othello *othello, int position, char player) {
 	/* Horizontal en partant sur la gauche */	
 	if ( i % W_SIDE != 0 ) { /* Si la case a gauche est enemi, on part a l'avanture */
 		for( --i; i % W_SIDE != 0 && othello->grid[i] == inv_player; i--) 
-			; 
-		if ( othello->grid[i] == player ) 
-			for( ++i; othello->grid[i] == inv_player ; i++) 
-				do_calc(othello, i, player);
+			do_calc(othello, i, player);
 	}
 
 	/* Horizontal en partant vers la droite */
