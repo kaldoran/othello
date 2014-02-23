@@ -23,10 +23,13 @@ int videbuffer();
 
 int othello_ask_choice(Othello *othello, char player);
 
-int good_move(Othello *othello, int position, char player, int return_or_not);
+void change_value(Othello *othello, int position, char player);
+
+int good_move(Othello *othello, int position, char player);
 
 int move_left (Othello *othello, char player );
 
+void move_IA (Othello *othello, char player );
 /* Affiche la grille d'othello
  */
 void print_othello(Othello *othello);

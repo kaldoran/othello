@@ -1,7 +1,8 @@
-- Verification coup jouée
-- Verification coup possible
-- Retourner pion
-- IA basique 		[ Rand ]
+- Verification coup jouée 
+	-- Manque les diagonales
+		Ce qui explique que certains pions ne soit pas retourné
+--- ATTENTION : Boucle infini si jamais plus aucun coup est possible
+
 - IA Améliorée 	[ Min - Max ]
 - IA ++			[ Min - Max + Alpha - Beta ]
 - Mode 2 joueurs

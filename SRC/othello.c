@@ -2,16 +2,7 @@
 #include <string.h>
 #include <ctype.h>
 #include "othello.h"
-
-/* Verifie seulement si le coup est possible
- */
-#define check_only(OTHELLO, POSITION, PLAYER)          \
-                good_move(OTHELLO, POSITION, PLAYER, 0)
-                
-/* Verifie si le coup est correct et retournes les pions 
- */
-#define check_and_return(OTHELLO, POSITION, PLAYER)    \
-                good_move(OTHELLO, POSITION, PLAYER, 1)
+#include "time.h"
 
 Othello *new_othello() {
 
@@ -72,8 +63,11 @@ int othello_ask_choice(Othello *othello, char player) {
 			row = toupper(row) - 'A';
 			--column;
 
-			if ( check_and_return(othello, SQUARE((int)row, column), player) )
-				return videbuffer();
+			if ( good_move(othello, SQUARE((int)row, column), player) ) {
+				change_value(othello, SQUARE((int)row, column), player);
+				videbuffer();
+				return 1;
+			}
 		}
 		
 		printf("Erreur : Entrez un nouveau coup : ");
@@ -82,11 +76,61 @@ int othello_ask_choice(Othello *othello, char player) {
 	return 1;
 }
 
-Othello *change_value(Othello *othello, int position, char player) {
+/* change le pion, */
+void do_calc(Othello *othello, int position, char player) {
 	othello->grid[position] = player;
-	(player == PAWN_J1 ) ? othello->nb_pawn_p1++ : othello->nb_pawn_p2++;
+	(player == 'X') ? othello->nb_pawn_p1++ : othello->nb_pawn_p2++;
+	(player == 'O') ? othello->nb_pawn_p1-- : othello->nb_pawn_p2--;
 	
-	return othello;
+	return;
+}
+
+/* Change la grille */
+void change_value(Othello *othello, int position, char player) {
+
+	int i = position;
+	char inv_player = SWITCH_PLAYER(player);
+	
+	othello->grid[i] = player;
+	(player == 'X') ? othello->nb_pawn_p1++ : othello->nb_pawn_p2++;
+	/* Horizontal en partant sur la gauche */	
+	if ( i % W_SIDE != 0 ) { /* Si la case a gauche est enemi, on part a l'avanture */
+		for( --i; i % W_SIDE != 0 && othello->grid[i] == inv_player; i--) 
+			; 
+		if ( othello->grid[i] == player ) 
+			for( ++i; othello->grid[i] == inv_player ; i++) 
+				do_calc(othello, i, player);
+	}
+
+	/* Horizontal en partant vers la droite */
+	if ( (i = position) % W_SIDE != 7 ) { /* Si la case a droite est enemi, on part a l'avanture */
+		for(++i ; i % W_SIDE != 7 && othello->grid[i] == inv_player; i++) 
+			; 
+		if ( othello->grid[i] == player ) 
+			for( --i ; othello->grid[i] == inv_player; i--) 
+				do_calc(othello, i, player);
+	}
+	
+	/* Vertical en partant vers le haut */
+
+	if ( (i = position) > W_SIDE ) {
+		for(i -= W_SIDE; i > 0 && othello->grid[i] == inv_player; i -= W_SIDE) 
+			; 
+		if ( othello->grid[i] == player ) 
+			for( i += W_SIDE; othello->grid[i] == inv_player; i += W_SIDE) 
+				do_calc(othello, i, player);
+	}
+
+	/* Vertical en partant vers le bas */
+	if ( (i = position) < SQUARE(0, (W_SIDE - 1)) ) {
+		for(i += W_SIDE; i < GRID_SIZE && othello->grid[i] == inv_player; i += W_SIDE) 
+			; 
+		if ( othello->grid[i] == player )
+			for( i -= W_SIDE; othello->grid[i] == inv_player; i -= W_SIDE) 
+				do_calc(othello, i, player);
+	}
+	
+	return;
 }
 
 /* Verifie si le coup est correct si return_or_not == 0
@@ -100,70 +144,87 @@ Othello *change_value(Othello *othello, int position, char player) {
  *		on fait demi tour en inversant les pions
  *		Et on ne s'arretepas au premier coup trouvé 
  */
-int good_move(Othello *othello, int position, char player, int return_or_not) {
+int good_move(Othello *othello, int position, char player) {
 	
 	int i;
 	char inv_player = SWITCH_PLAYER(player);
-	DEBUG_PRINTF("%c - %d\n", player, position);
-	/* Horizontal en partant sur la gauche */
 	
+	/* En verifiant le coup ça devrait aller mieu */
+	if (othello->grid[position] != 0 ) 
+		return 0;
+	
+	/* Horizontal en partant sur la gauche */	
 	if ( (i = position) % W_SIDE != 0 && othello->grid[--i] == inv_player ) { /* Si la case a gauche est enemi, on part a l'avanture */
 		for( ; i % W_SIDE != 0 && othello->grid[i] == inv_player; i--) 
 			; 
-		if ( othello->grid[i] == player ) {
-			if ( return_or_not ) {
-				for( ++i ; othello->grid[i] == inv_player; i++) 
-					othello = change_value(othello, i, player);
-				othello = change_value(othello, i, player);
-			}
+		if ( othello->grid[i] == player )
 			return 1;
-		
-		} 	
 	}
 
 	/* Horizontal en partant vers la droite */
 	if ( (i = position) % W_SIDE != 7 && othello->grid[++i] == inv_player ) { /* Si la case a droite est enemi, on part a l'avanture */
 		for(; i % W_SIDE != 7 && othello->grid[i] == inv_player; i++) 
 			; 
-		if ( othello->grid[i] == player ) {
-			if ( return_or_not ) {
-				for( --i ; othello->grid[i] == inv_player; i--) 
-					othello = change_value(othello, i, player);
-				othello = change_value(othello, i, player);
-			} 
+		if ( othello->grid[i] == player )
 			return 1; 
-		}
+
 	}
 	
 	/* Vertical en partant vers le haut */
-	if ( (i = position) < W_SIDE && othello->grid[i -= W_SIDE] == inv_player ) {
+
+	if ( (i = position) > W_SIDE && othello->grid[i -= W_SIDE ] == inv_player ) {
 		for(; i > 0 && othello->grid[i] == inv_player; i -= W_SIDE) 
 			; 
-		if ( othello->grid[i] == player ) {
-			if ( return_or_not ) {
-				for( i += W_SIDE; othello->grid[i] == inv_player; i += W_SIDE) 
-					othello = change_value(othello, i, player);
-				othello = change_value(othello, i, player);
-			} 
+		if ( othello->grid[i] == player )
 			return 1;
-		}	
 	}
-	DEBUG_PRINTF("%d\n", SQUARE(0, W_SIDE - 1));
+
 	/* Vertical en partant vers le bas */
-	if ( (i = position) < SQUARE(0, W_SIDE - 1) && othello->grid[i += W_SIDE] == inv_player ) {
+	if ( (i = position) < SQUARE(0, (W_SIDE - 1)) && othello->grid[i += W_SIDE] == inv_player ) {
 		for(; i < GRID_SIZE && othello->grid[i] == inv_player; i += W_SIDE) 
 			; 
-		if ( othello->grid[i] == player ) {
-			if ( return_or_not ) {
-				for( i -= W_SIDE ; othello->grid[i] == inv_player; i -= W_SIDE) 
-					othello = change_value(othello, i, player);
-				othello = change_value(othello, i, player);
-			} 
-			return 1;
-		}	
+		if ( othello->grid[i] == player ) 
+			return 1;	
 	}
 	
 	return 0;
+}
+
+int hasard(int max) { // fonction hassard , donne un nombre compris entre 0 et max de facon aléatoire.
+  return (int)  ((float) rand() / RAND_MAX * max );
+}
+
+void move_IA (Othello *othello, char player ) {
+
+	int i,nb_coup_possible = 0;
+	int *coup_possible = NULL;
+	int * tmp;
+	
+	if((coup_possible = calloc(nb_coup_possible, sizeof(int))) == NULL)
+		QUIT_MSG("Erreur : Probleme d'allocation du tableau de l'IA\n");
+
+	for ( i = 0; i < GRID_SIZE; i++ ) 
+		if ( good_move(othello, i, player) ) {
+			if ( (tmp = realloc (coup_possible, ++nb_coup_possible * sizeof(int)) ) == NULL ) 
+				QUIT_MSG("Erreur : Probleme d'Re-allocation du tableau de l'IA\n");
+				
+			coup_possible = tmp;
+			printf("Move REAL: %d - %d\n", i, nb_coup_possible );
+			coup_possible[nb_coup_possible - 1] = i;
+		}
+	
+	if ( nb_coup_possible > 0) {
+		nb_coup_possible = coup_possible[hasard(nb_coup_possible)];
+		free(coup_possible);
+
+		printf("je vais jouer en %d\n", nb_coup_possible);
+		change_value(othello, nb_coup_possible, player);
+	}
+	else 
+		printf("Je suis bloquée :'( \n");
+		
+
+	return;
 }
 
 int move_left (Othello *othello, char player ) {
@@ -174,9 +235,9 @@ int move_left (Othello *othello, char player ) {
 		return 0;
 		
 	for ( i = 0; i < GRID_SIZE; i++ ) 
-		if ( check_only(othello, i,player) ) 
+		if ( good_move(othello, i,player) ) 
 				return 1;
-			
+		
 	return 0; /* Normalement jamais atteind , c'est juste pour faire plaisir a GCC */
 }
 
