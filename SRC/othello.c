@@ -129,6 +129,42 @@ void change_value(Othello *othello, int position, char player) {
 			for( i -= W_SIDE; othello->grid[i] == inv_player; i -= W_SIDE) 
 				do_calc(othello, i, player);
 	}
+
+	/* Diagonale en partant vers bas droite */
+	if ( (i = position) < SQUARE(0, (W_SIDE - 1)) && ((i = position) % W_SIDE != 7) ) {
+		for(; i < GRID_SIZE && othello->grid[i] == inv_player; i += W_SIDE + 1) 
+			; 
+		if ( othello->grid[i] == player ) 
+			for( i += W_SIDE + 1; othello->grid[i] == inv_player; i += W_SIDE + 1) 
+				do_calc(othello, i, player);
+	}
+
+	/* Diagonale en partant vers bas gauche */
+	if ( (i = position) < SQUARE(0, (W_SIDE - 1)) && ((i = position) % W_SIDE != 0) ) {
+		for(; i < GRID_SIZE && othello->grid[i] == inv_player; i += W_SIDE - 1) 
+			; 
+		if ( othello->grid[i] == player ) 
+			for( i += W_SIDE - 1; othello->grid[i] == inv_player; i += W_SIDE - 1) 
+				do_calc(othello, i, player);	
+	}
+
+	/* Diagonale en partant vers haut droite */
+	if ( (i = position) > W_SIDE && ((i = position) % W_SIDE != 7)) {
+		for(; i < GRID_SIZE && othello->grid[i] == inv_player; i -= W_SIDE + 1) 
+			; 
+		if ( othello->grid[i] == player ) 
+			for( i -= W_SIDE + 1; othello->grid[i] == inv_player; i -= W_SIDE + 1) 
+				do_calc(othello, i, player);	
+	}
+
+	/* Diagonale en partant vers haut gauche */
+	if ( (i = position) > W_SIDE && ((i = position) % W_SIDE != 0)) {
+		for(; i < GRID_SIZE && othello->grid[i] == inv_player; i -= W_SIDE - 1) 
+			; 
+		if ( othello->grid[i] == player ) 
+			for( i -= W_SIDE - 1; othello->grid[i] == inv_player; i -= W_SIDE - 1) 
+				do_calc(othello, i, player);	
+	}
 	
 	return;
 }
@@ -182,6 +218,45 @@ int good_move(Othello *othello, int position, char player) {
 	/* Vertical en partant vers le bas */
 	if ( (i = position) < SQUARE(0, (W_SIDE - 1)) && othello->grid[i += W_SIDE] == inv_player ) {
 		for(; i < GRID_SIZE && othello->grid[i] == inv_player; i += W_SIDE) 
+			; 
+		if ( othello->grid[i] == player ) 
+			return 1;	
+	}
+
+	/* Diagonale 
+	 * Dans cette partie je vais gérer les coups en diagonales
+	 	- Diagonale de la position vers bas droite
+	 	- Diagonale de la position vers bas gauche
+	 	- Diagonale de la position vers haut droite
+	 	- Diagonale de la position vers haut gauche*/
+
+	/* Diagonale en partant vers bas droite */
+	if ( (i = position) < SQUARE(0, (W_SIDE - 1)) && ((i = position) % W_SIDE != 7) && othello->grid[i += W_SIDE + 1] == inv_player ) {
+		for(; i < GRID_SIZE && othello->grid[i] == inv_player; i += W_SIDE + 1) 
+			; 
+		if ( othello->grid[i] == player ) 
+			return 1;	
+	}
+
+	/* Diagonale en partant vers bas gauche */
+	if ( (i = position) < SQUARE(0, (W_SIDE - 1)) && ((i = position) % W_SIDE != 0) && othello->grid[i += W_SIDE - 1] == inv_player ) {
+		for(; i < GRID_SIZE && othello->grid[i] == inv_player; i += W_SIDE - 1) 
+			; 
+		if ( othello->grid[i] == player ) 
+			return 1;	
+	}
+
+	/* Diagonale en partant vers haut droite */
+	if ( (i = position) > W_SIDE && ((i = position) % W_SIDE != 7) && othello->grid[i -= W_SIDE + 1] == inv_player ) {
+		for(; i < GRID_SIZE && othello->grid[i] == inv_player; i -= W_SIDE + 1) 
+			; 
+		if ( othello->grid[i] == player ) 
+			return 1;	
+	}
+
+	/* Diagonale en partant vers haut gauche */
+	if ( (i = position) > W_SIDE && ((i = position) % W_SIDE != 0) && othello->grid[i -= W_SIDE - 1] == inv_player ) {
+		for(; i < GRID_SIZE && othello->grid[i] == inv_player; i -= W_SIDE - 1) 
 			; 
 		if ( othello->grid[i] == player ) 
 			return 1;	
@@ -278,4 +353,5 @@ void print_othello(Othello *othello) {
  
 	return;
 }
+
 
