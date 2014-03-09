@@ -1,9 +1,7 @@
 - Verification coup jouée 
-	-- Manque les diagonales
-		Ce qui explique que certains pions ne soit pas retourné
 --- ATTENTION : Boucle infini si jamais plus aucun coup est possible
 
-- IA Améliorée 	[ Min - Max ]
+- IA Améliorée 	[Fonction qui retourne le coup à jouer, a voir combien de profondeur on utilise]
 - IA ++			[ Min - Max + Alpha - Beta ]
 
 - Mode 2 joueurs
