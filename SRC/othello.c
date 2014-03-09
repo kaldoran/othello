@@ -87,7 +87,11 @@ void do_calc(Othello *othello, int position, char player) {
 
 /* Change la grille */
 void change_value(Othello *othello, int position, char player) {
-
+	/* Pourquoi faire une double boucle ?
+	 *	- car dans cette fonction on verifi TOUT les chemins
+	 *	Il faut donc etre sur que le chemin que l'on test contient un pio ennemie
+	 *	Pour cause, si il y en a pas alors la boucle s'arretera uniquement sur le bord [ en ajoutant des pions sur la grille au passage ]
+	 */
 	int i = position;
 	char inv_player = SWITCH_PLAYER(player);
 	
@@ -96,7 +100,10 @@ void change_value(Othello *othello, int position, char player) {
 	/* Horizontal en partant sur la gauche */	
 	if ( i % W_SIDE != 0 ) { /* Si la case a gauche est enemi, on part a l'avanture */
 		for( --i; i % W_SIDE != 0 && othello->grid[i] == inv_player; i--) 
-			do_calc(othello, i, player);
+			; 
+		if ( othello->grid[i] == player ) 
+			for( ++i; othello->grid[i] == inv_player ; i++) 
+				do_calc(othello, i, player);
 	}
 
 	/* Horizontal en partant vers la droite */
@@ -236,7 +243,7 @@ int good_move(Othello *othello, int position, char player) {
 	}
 
 	/* Diagonale en partant vers bas gauche */
-	if ( (i = position) < SQUARE(0, (W_SIDE - 1)) && ((i = position) % W_SIDE != 0) && othello->grid[i += W_SIDE - 1] == inv_player ) {
+	if ( (i = position) < SQUARE(0, (W_SIDE - 1)) && i % W_SIDE != 0 && othello->grid[i += W_SIDE - 1] == inv_player ) {
 		for(; i < GRID_SIZE && othello->grid[i] == inv_player; i += W_SIDE - 1) 
 			; 
 		if ( othello->grid[i] == player ) 
@@ -244,7 +251,7 @@ int good_move(Othello *othello, int position, char player) {
 	}
 
 	/* Diagonale en partant vers haut droite */
-	if ( (i = position) > W_SIDE && ((i = position) % W_SIDE != 7) && othello->grid[i -= W_SIDE + 1] == inv_player ) {
+	if ( (i = position) > W_SIDE && i % W_SIDE != 7 && othello->grid[i -= (W_SIDE + 1)] == inv_player ) {
 		for(; i < GRID_SIZE && othello->grid[i] == inv_player; i -= (W_SIDE + 1)) 
 			; 
 		if ( othello->grid[i] == player ) 
@@ -252,7 +259,7 @@ int good_move(Othello *othello, int position, char player) {
 	}
 
 	/* Diagonale en partant vers haut gauche */
-	if ( (i = position) > W_SIDE && ((i = position) % W_SIDE != 0) && othello->grid[i -= W_SIDE - 1] == inv_player ) {
+	if ( (i = position) > W_SIDE && i % W_SIDE != 0 && othello->grid[i -= (W_SIDE - 1)] == inv_player ) {
 		for(; i < GRID_SIZE && othello->grid[i] == inv_player; i -= (W_SIDE - 1) ) 
 			; 
 		if ( othello->grid[i] == player ) 
