@@ -94,10 +94,10 @@ int eval_max (Othello *othello, char player, int depth){
 }
 
 int eval_grid(Othello *othello, char player){
-	int i, eval;
+	int eval;
 	if ( player == PAWN_J1 )
-		eval = othello->nb_pawn_j1 - nb_pawn_j2; 
+		eval = othello->nb_pawn_p1 - othello->nb_pawn_p2; 
 	else 
-		eval = othello->nb_pawn_j2 - nb_pawn_j1;
+		eval = othello->nb_pawn_p2 - othello->nb_pawn_p1;
 	return eval;
 }
