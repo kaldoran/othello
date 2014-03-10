@@ -3,13 +3,13 @@
 
 
 static const int grid_eval[] = { 500, -150, 30, 10, 10, 30, -150,  500,
-							-150, -250,  0,  0,  0,  0, -250, -150,
-							30,    0,  1,  2,  2,  1,    0,   30,
-							10,    0,  2, 16, 16,  2,    0,   10,
-							10,    0,  2, 16, 16,  2,    0,   10,
-							30,    0,  1,  2,  2,  1,    0,   30,
-						    -150, -250,  0,  0,  0,  0, -250, -150,
-						    500, -150, 30, 10, 10, 30, -150,   500};
+				-150, -250,  0,  0,  0,  0, -250, -150,
+				30,    0,  1,  2,  2,  1,    0,   30,
+				10,    0,  2, 16, 16,  2,    0,   10,
+				10,    0,  2, 16, 16,  2,    0,   10,
+				30,    0,  1,  2,  2,  1,    0,   30,
+				-150, -250,  0,  0,  0,  0, -250, -150,
+				500, -150, 30, 10, 10, 30, -150,   500};
 
 
 /* Fonction qui évalue tous les coups possibles à jouer
@@ -94,7 +94,7 @@ int eval_max (Othello *othello, char player, int depth){
 }
 
 int eval_grid(Othello *othello, char player){
-	int i, ;
+	int i, eval;
 	if ( player == PAWN_J1 )
 		eval = othello->nb_pawn_j1 - nb_pawn_j2; 
 	else 
