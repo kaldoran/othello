@@ -19,8 +19,6 @@
  */
 Othello *new_othello();
 
-int videbuffer();
-
 int othello_ask_choice(Othello *othello, char player);
 
 void change_value(Othello *othello, int position, char player);
@@ -33,5 +31,11 @@ void move_IA (Othello *othello, char player );
 /* Affiche la grille d'othello
  */
 void print_othello(Othello *othello);
+
+/* Verifi si le choix est entre 0 et val_max 
+ * Ou égale a -1 , si oui la valeur est retourner
+ * Sinon la question est reposée
+ */
+int verif_choix(char *phrase,int val_max);
 
 #endif

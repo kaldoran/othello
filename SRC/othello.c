@@ -1,5 +1,6 @@
 #include <string.h>
 #include <ctype.h>
+#include "global.h"
 #include "othello.h"
 #include "time.h"
 
@@ -35,15 +36,6 @@ Othello *new_othello() {
 	return othello;
 }
 
-/* Vide le buffer
- * a deplacer dans un fichier global
- */
-int videbuffer() {
-  char videbuffer = 'a';
-  while( (videbuffer = getchar()) != '\0' && videbuffer != '\n'); // on vide le buffer
-  return 1;
-}
-
 /* Récupere le coup sur STDIN
  * Et verifi simplement que le coup est dans la grille 
  */
@@ -56,7 +48,7 @@ int othello_ask_choice(Othello *othello, char player) {
 	printf("%c ou voulez vous jouer ? ", player);
 	while(1) {
 
-		scanf("%c%d",&row, &column);
+		scanf("%1c%1d",&row, &column);
 		DEBUG_PRINTF("%c %d\n", row, column);
 		if ( (( row >= 'A' && row < 'A' + W_SIDE ) || ( row >= 'a' && row < 'a' + W_SIDE )) && column > 0 && column <= W_SIDE ) {
 			row = toupper(row) - 'A';
@@ -293,7 +285,6 @@ void move_IA (Othello *othello, char player ) {
 	
 	if ( nb_coup_possible > 0) {
 		nb_coup_possible = coup_possible[hasard(nb_coup_possible)];
-		free(coup_possible);
 
 		printf("je vais jouer en %c %d - %d\n",  COLUMN(nb_coup_possible) ,ROW(nb_coup_possible), nb_coup_possible);
 		change_value(othello, nb_coup_possible, player);
@@ -301,7 +292,7 @@ void move_IA (Othello *othello, char player ) {
 	else 
 		printf("Je suis bloquée :'( \n");
 		
-
+	free(coup_possible);
 	return;
 }
 
@@ -316,7 +307,7 @@ int move_left (Othello *othello, char player ) {
 		if ( good_move(othello, i,player) ) 
 				return 1;
 		
-	return 0; /* Normalement jamais atteind , c'est juste pour faire plaisir a GCC */
+	return 0;
 }
 
 /* Mettre dans un fichier "affichage"
@@ -355,6 +346,25 @@ void print_othello(Othello *othello) {
 	printf("\n    Score \033[30mX\033[0m : %u   Score O : %u\n",othello->nb_pawn_p1, othello->nb_pawn_p2);
  
 	return;
+}
+
+
+int verif_choix(char *phrase,int val_max) {
+
+	int choix;
+	while(1) {   
+		while(scanf("%1d",&choix) == 0) // Si l'utilisateur entre autre chose qu'un nombre
+			printf("\t-- Erreur --\tLa valeur entrée n'est pas un nombre.\n%s",phrase); 
+			if(choix == -1 )
+				return choix;
+			if( (choix <= val_max && choix > 0) || choix == -1)
+				return choix;
+			else
+				printf("\t-- Erreur --\tLa valeur entrée est soit trop grande soit trop petite.\n%s",phrase);
+  
+		videbuffer();
+	}
+	return -1;
 }
 
 

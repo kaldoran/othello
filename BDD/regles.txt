@@ -1,0 +1,17 @@
+
+Le but du jeu est d'avoir plus de pions de sa couleur que l'adversaire à la fin de la partie.
+
+Les joueurs disposent de 64 pions bicolores, noirs d'un côté et blancs de l'autre.
+
+Tour à tour les deux joueurs placent un pion dans une des positions valide de leurs choix
+Le pion alors posé retourne tout les pions présent entre se pion et un autre pion de la meme couleur et ce dans toutes les directions.
+
+Le vainqueur est le qui posede le plus de pion en fin de partie.
+La fin de partie est effectuée lorsque toute la grille est remplie,
+ou que aucun des 2 joueurs ne puissent jouer.
+
+Si un joueur ne peux jouer , son tour est passé.
+
+Si personne n'y arrive avant que toutes les cases de la grille de jeu sont remplies, la partie est déclarée nulle.
+
+
