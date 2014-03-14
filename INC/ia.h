@@ -5,8 +5,11 @@
 #include "othello.h"
 #include "global.h"
 
-/* Prototype de fonction */
+/* constante */
+#define DEPTH 5	/* profondeur max pour la recherche du minMax */
 
+/* Prototype de fonction */
+int minMax(Othello *othello, char player);
 int eval_min(Othello *othello, char player, int depth);
 int eval_max(Othello *othello, char player, int depth);
 int eval_grid(Othello *othello, char player);

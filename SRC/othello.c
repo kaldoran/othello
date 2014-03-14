@@ -367,4 +367,14 @@ int verif_choix(char *phrase,int val_max) {
 	return -1;
 }
 
+/* Libération de l'allocation mémoire de 
+ * l'othello 
+ */
+void free_othello(Othello *othello){
+	free(othello->grid);
+	free(othello);
+
+	return ;
+}
+
 
