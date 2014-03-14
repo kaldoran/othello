@@ -12,6 +12,12 @@ static const int grid_eval[] = { 500, -150, 30, 10, 10, 30, -150,  500,
 				500, -150, 30, 10, 10, 30, -150,   500};
 
 
+Othello* cpy_othello(Othello *othello){
+	Othello *copy = new_othello();
+	memcpy(copy->grid, othello->grid, GRID_SIZE * sizeof(char));
+
+	return copy;
+}
 
 /* Fonction MinMax qui retourne le meilleur coup à jouer */
 int minMax(Othello *othello, char player){
@@ -19,8 +25,8 @@ int minMax(Othello *othello, char player){
 	Othello *copy = NULL;
 
 	for( i = 0; i < GRID_SIZE; ++i ){
-		copy = new_othello();
-		memcpy(copy->grid, othello->grid, GRID_SIZE * sizeof(char));
+
+		copy = cpy_othello(othello);
 
 		if(good_move(copy, i, player)){
 			change_value(copy, i, player);
@@ -60,8 +66,7 @@ int eval_min (Othello *othello, char player, int depth){
    		 * de cette façon sa me permet d'annuler le coup 
    		 * que je viens de jouer
 		 */
-		copy = new_othello();
-		memcpy(copy->grid, othello->grid, GRID_SIZE * sizeof(char));
+		copy = cpy_othello(othello);
 
 		/* Je joue mon coup, si il est possible alors je vais  
 		 * chercher dans le coups suivant le meilleur des coups possibles
@@ -111,8 +116,7 @@ int eval_max (Othello *othello, char player, int depth){
    		 * de cette façon sa me permet d'annuler le coup 
    		 * que je viens de jouer
 		 */
-		copy = new_othello();
-		memcpy(copy->grid, othello->grid, GRID_SIZE * sizeof(char));
+		copy = cpy_othello(othello);
 
 		/* Si ce coups est un bon coup je le fais et 
 		 * coups suivant le moins bon des coups possibles
