@@ -63,9 +63,7 @@ void charger_configuration(Configuration *config) {
 		}
 	}
 
-	printf("Config : %s", config->pseudo);
 	fclose(fichier);
-	
 	return;
 }
 

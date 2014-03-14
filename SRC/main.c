@@ -12,10 +12,10 @@ int main(int argc, char *argv[]) {
 
 	char player = 'X';
 	srand(time(NULL));
-	Configuration *config = nouvelle_configuration();
-	charger_configuration(config);
-	printf("%s\n", config->pseudo);
-	free(config);
+//	Configuration *config = nouvelle_configuration();
+//	charger_configuration(config);
+//	printf("%s\n", config->pseudo);
+//	free(config);
 
 	do_pause();
 	do {
