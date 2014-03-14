@@ -353,7 +353,7 @@ int verif_choix(char *phrase,int val_max) {
 
 	int choix;
 	while(1) {   
-		while(scanf("%1d",&choix) == 0) // Si l'utilisateur entre autre chose qu'un nombre
+		while(scanf("%2d",&choix) == 0) // Si l'utilisateur entre autre chose qu'un nombre
 			printf("\t-- Erreur --\tLa valeur entrée n'est pas un nombre.\n%s",phrase); 
 			if(choix == -1 )
 				return choix;

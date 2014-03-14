@@ -1,0 +1,6 @@
+# L'ordre d'écriture des parametes importe peu
+# Cependant merci de respecter la structure du type :
+# Nom:valeur
+Pseudo:Othello_Othello_Oustiti
+Ip:127.0.0.1
+Port:16384
