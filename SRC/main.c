@@ -17,12 +17,13 @@ int main(int argc, char *argv[]) {
 //	printf("%s\n", config->pseudo);
 //	free(config);
 
-	do_pause();
+//	do_pause();
 	do {
 		Othello *othello = new_othello(); /* Crée un nouvelle othello */
 		_reset_term();
 		menu_principal();
 		choix = verif_choix("Quel est votre choix ? ",4);
+		videbuffer();
 		switch(choix) {
 			case -1:
 				free_othello(othello);
