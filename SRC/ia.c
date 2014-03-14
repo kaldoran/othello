@@ -12,6 +12,12 @@ static const int grid_eval[] = { 500, -150, 30, 10, 10, 30, -150,  500,
 				500, -150, 30, 10, 10, 30, -150,   500};
 
 
+Othello* cpy_othello(Othello *othello){
+	Othello *copy = new_othello();
+	memcpy(copy->grid, othello->grid, GRID_SIZE * sizeof(char));
+
+	return copy;
+}
 
 /* Fonction MinMax qui retourne le meilleur coup à jouer */
 int minMax(Othello *othello, char player){
@@ -19,11 +25,11 @@ int minMax(Othello *othello, char player){
 	Othello *copy = NULL;
 
 	for( i = 0; i < GRID_SIZE; ++i ){
-		copy = new_othello();
-		memcpy(copy->grid, othello->grid, GRID_SIZE * sizeof(char));
 
-		if(good_move(copy, i, player)){
-			change_value(copy, i, player);
+		copy = cpy_othello(othello);
+
+		if(pushPion(copy, i, player)){
+
 			if( (tmp = eval_min(copy, player, depth)) > bestScore){
 				bestScore = tmp;
 				bestMove = i;
@@ -60,19 +66,14 @@ int eval_min (Othello *othello, char player, int depth){
    		 * de cette façon sa me permet d'annuler le coup 
    		 * que je viens de jouer
 		 */
-		copy = new_othello();
-		memcpy(copy->grid, othello->grid, GRID_SIZE * sizeof(char));
+		copy = cpy_othello(othello);
 
 		/* Je joue mon coup, si il est possible alors je vais  
 		 * chercher dans le coups suivant le meilleur des coups possibles
 		 * et je le teste avec mon min actuel
 		 */
-		if(good_move(copy, i, player)){
-			/* Surement à changer par la suite de façon à avoir une fonction
-			 * qui vérifie si c'est un bon coup et qui le place
-			 * sinon renvoie -1, parce que la c'est crade !
-			 */
-			change_value(copy, i, player);
+		if(pushPion(copy, i, player)){
+
 			if((score_other_player = eval_max(copy, SWITCH_PLAYER(player), depth -1)) < min){
 				min = score_other_player;
 			}
@@ -101,7 +102,7 @@ int eval_max (Othello *othello, char player, int depth){
 
 
 	/* Le i me sert pour les lignes */
-	for(i = 0; i < W_SIDE; ++i){
+	for(i = 0; i < GRID_SIZE; ++i){
 
 		/* Copie de la grille pour évaluer tous les coups possibles 
    		 * donc pour que je puisse évaluer tous les coups je 
@@ -111,15 +112,14 @@ int eval_max (Othello *othello, char player, int depth){
    		 * de cette façon sa me permet d'annuler le coup 
    		 * que je viens de jouer
 		 */
-		copy = new_othello();
-		memcpy(copy->grid, othello->grid, GRID_SIZE * sizeof(char));
+		copy = cpy_othello(othello);
 
 		/* Si ce coups est un bon coup je le fais et 
 		 * coups suivant le moins bon des coups possibles
 		 * et je le teste avec mon max actuel
 		 */
-		if(good_move(copy, i, player)){
-			change_value(copy, i, player);
+		if(pushPion(copy, i, player)){
+
 			if((score_other_player = eval_min(copy, SWITCH_PLAYER(player), depth -1)) > max){
 				max = score_other_player;
 			}

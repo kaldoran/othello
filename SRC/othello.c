@@ -367,6 +367,15 @@ int verif_choix(char *phrase,int val_max) {
 	return -1;
 }
 
+int pushPion(Othello *othello, int position, char player){
+	if(good_move(othello, position, player)){
+		change_value(othello, position, player);
+		return 1;
+	}
+
+	return 0;
+}
+
 /* Libération de l'allocation mémoire de 
  * l'othello 
  */
