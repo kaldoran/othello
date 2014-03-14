@@ -106,7 +106,7 @@ int eval_max (Othello *othello, char player, int depth){
 
 
 	/* Le i me sert pour les lignes */
-	for(i = 0; i < W_SIDE; ++i){
+	for(i = 0; i < GRID_SIDE; ++i){
 
 		/* Copie de la grille pour évaluer tous les coups possibles 
    		 * donc pour que je puisse évaluer tous les coups je 
