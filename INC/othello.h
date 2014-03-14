@@ -43,4 +43,7 @@ int verif_choix(char *phrase,int val_max);
  */
 void free_othello(Othello *othello);
 
+/* Vérifie le coup et l'ajoute directement */
+int pushPion(Othello *othello, int position, char player);
+
 #endif
