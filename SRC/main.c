@@ -25,8 +25,7 @@ int main(int argc, char *argv[]) {
 		choix = verif_choix("Quel est votre choix ? ",4);
 		switch(choix) {
 			case -1:
-				free(othello->grid);
-				free(othello);
+				free_othello(othello);
 				printf("\t\tAu revoir et a bientôt\n");
 				pause_ms(1200);
 				_reset_term(); 
