@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <time.h>
 
+#include "tcp.h"
 #include "delay_sleep.h"
 #include "othello.h"
 #include "affichage.h"
@@ -9,17 +10,24 @@
 
 int main(int argc, char *argv[]) {
 	int choix;
-
 	char player = 'X';
 	srand(time(NULL));
-//	Configuration *config = nouvelle_configuration();
-//	charger_configuration(config);
-//	printf("%s\n", config->pseudo);
-//	free(config);
+	Othello *othello = new_othello(); /* Crée un nouvelle othello */
+	Configuration *config = nouvelle_configuration();
+	charger_configuration(config);
 
-//	do_pause();
+	new_socket(config);
+	if (tcp_start(config)) {
+		/* Oubli pas de lancer le serveur si tu veux tester tournier */
+		printf("SEND : Envoi de données %d\n",tcp_action(config, config->pseudo, 64, SEND));
+		printf("SEND : Je veux jouer en 20 - %d\n",tcp_action(config, "20", 2, SEND));
+	}
+	close(config->id_socket);
+	free(config);
+	do_pause();
+	
 	do {
-		Othello *othello = new_othello(); /* Crée un nouvelle othello */
+
 		_reset_term();
 		menu_principal();
 		choix = verif_choix("Quel est votre choix ? ",4);
