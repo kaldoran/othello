@@ -139,7 +139,7 @@ void change_value(Othello *othello, int position, char player) {
 		for(i += W_SIDE - 1; i < GRID_SIZE && othello->grid[i] == inv_player; i += W_SIDE - 1) 
 			; 
 		if ( othello->grid[i] == player ) 
-			for( i -= W_SIDE + 1; othello->grid[i] == inv_player; i -= W_SIDE + 1) 
+			for( i -= W_SIDE - 1; othello->grid[i] == inv_player; i -= W_SIDE - 1) 
 				do_calc(othello, i, player);	
 	}
 
@@ -235,7 +235,7 @@ int good_move(Othello *othello, int position, char player) {
 
 	/* Diagonale en partant vers bas gauche */
 	if ( (i = position) < SQUARE(0, (W_SIDE - 1)) && i % W_SIDE != 0 && othello->grid[i += W_SIDE - 1] == inv_player ) {
-		for(; i < GRID_SIZE && othello->grid[i] == inv_player; i += W_SIDE - 1) 
+		for(; i < GRID_SIZE && i % W_SIDE != 0 && othello->grid[i] == inv_player; i += W_SIDE - 1) 
 			; 
 		if ( othello->grid[i] == player ) 
 			return 1;	
@@ -243,7 +243,7 @@ int good_move(Othello *othello, int position, char player) {
 
 	/* Diagonale en partant vers haut droite */
 	if ( (i = position) > W_SIDE && i % W_SIDE != 7 && othello->grid[i -= W_SIDE - 1] == inv_player ) {
-		for(; i > 0 && othello->grid[i] == inv_player; i -= W_SIDE - 1) 
+		for(; i > 0 && i % W_SIDE != 7 && othello->grid[i] == inv_player; i -= W_SIDE - 1) 
 			; 
 		if ( othello->grid[i] == player ) 
 			return 1;	
@@ -251,7 +251,7 @@ int good_move(Othello *othello, int position, char player) {
 
 	/* Diagonale en partant vers haut gauche */
 	if ( (i = position) > W_SIDE && i % W_SIDE != 0 && othello->grid[i -= W_SIDE + 1] == inv_player ) {
-		for(; i > 0 && othello->grid[i] == inv_player; i -= W_SIDE + 1 ) 
+		for(; i > 0 && i % W_SIDE != 0 && othello->grid[i] == inv_player; i -= W_SIDE + 1 ) 
 			; 
 		if ( othello->grid[i] == player ) 
 			return 1;	
