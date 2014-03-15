@@ -46,4 +46,6 @@ void free_othello(Othello *othello);
 /* Vérifie le coup et l'ajoute directement */
 int pushPion(Othello *othello, int position, char player);
 
+/* permet de lancer un jeu */
+void game(Othello *othello, char player, int nb_joueur_h);
 #endif

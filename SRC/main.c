@@ -10,24 +10,33 @@
 
 int main(int argc, char *argv[]) {
 	int choix;
+	Othello *othello;
 	char player = 'X';
 	srand(time(NULL));
-	Othello *othello = new_othello(); /* Crée un nouvelle othello */
-	Configuration *config = nouvelle_configuration();
-	charger_configuration(config);
 
-	new_socket(config);
-	if (tcp_start(config)) {
-		/* Oubli pas de lancer le serveur si tu veux tester tournier */
-		printf("SEND : Envoi de données %d\n",tcp_action(config, config->pseudo, 64, SEND));
-		printf("SEND : Je veux jouer en 20 - %d\n",tcp_action(config, "20", 2, SEND));
-	}
-	close(config->id_socket);
-	free(config);
-	do_pause();
-	
+	if ( 0 ) {
+		/* Chargement de la configuration */
+		Configuration *config = nouvelle_configuration();
+		charger_configuration(config);
+		
+		new_socket(config);
+		if (tcp_start(config)) {
+			/* Oubli pas de lancer le serveur si tu veux tester tournier */
+			printf("SEND : Envoi de données %d\n",tcp_action(config, config->pseudo, 64, SEND));
+			printf("SEND : Je veux jouer en 20 - %d\n",tcp_action(config, "20", 2, SEND));
+			close(config->id_socket);
+			free(config);
+		}
+		else {
+			free(config);
+			QUIT_MSG("Probleme lors de la création de la socket\n");
+		}
+
+		do_pause();
+	}	
+
 	do {
-
+		othello = new_othello(); /* Crée un nouvelle othello */
 		_reset_term();
 		menu_principal();
 		choix = verif_choix("Quel est votre choix ? ",4);
@@ -41,20 +50,15 @@ int main(int argc, char *argv[]) {
 				exit(EXIT_SUCCESS);
 			break;
 			case 1:
-				while(othello->nb_pawn_p1 > 0 && othello->nb_pawn_p2 > 0 && (othello->nb_pawn_p2 + othello->nb_pawn_p1) != GRID_SIZE ) {
-					print_othello(othello);  /* Affichage de l'othello */
-					if ( player == 'X' ) othello_ask_choice(othello, player);
-					else move_IA(othello, player);
-					player = SWITCH_PLAYER(player);
-				}
+				game(othello, player, 2);
 				do_pause();
 			break;
 			case 2:
-				printf("\tCase 2 \n");
+				game(othello, player, 1);
 				do_pause();
 			break;
 			case 3:
-				printf("\tCase 3 \n");
+				game(othello, player, 0);
 				do_pause();
 			break;
 			case 4:

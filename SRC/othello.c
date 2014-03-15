@@ -386,4 +386,13 @@ void free_othello(Othello *othello){
 	return ;
 }
 
+void game(Othello *othello, char player, int nb_joueur_h) {
+	while(othello->nb_pawn_p1 > 0 && othello->nb_pawn_p2 > 0 && (othello->nb_pawn_p2 + othello->nb_pawn_p1) != GRID_SIZE ) {
+		print_othello(othello);  /* Affichage de l'othello */
+		if ( nb_joueur_h == 2 || ( nb_joueur_h == 1 && player == 'X') ) othello_ask_choice(othello, player);		
+		if ( nb_joueur_h == 0 || ( nb_joueur_h == 1 && player == 'O') ) move_IA(othello, player);
+		player = SWITCH_PLAYER(player);
+	}
+}
+
 

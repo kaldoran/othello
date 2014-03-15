@@ -1,19 +1,11 @@
-- Verification coup jouée 
+- Verification fin partie
 --- ATTENTION : Boucle infini si jamais plus aucun coup est possible
 
 - IA Améliorée 	[Fonction qui retourne le coup à jouer, a voir combien de profondeur on utilise]
 - IA ++			[ Min - Max + Alpha - Beta ]
 
-- Mode 2 joueurs
-	-- Deja fait de facon indirect
-- IA Réseau
-	-- Voir le TCP
-- Menu
-	-- Des beauuuuu printf
 - Stats 
 	-- j'ai deja
-- Instruction / regle du jeu
-	- j'ai aussi
 - EE
  
 
