@@ -82,7 +82,7 @@ int eval_min (Othello *othello, char player, int depth){
 			copy = cpy_othello(othello);
 
 			change_value(copy, i, player);
-			if((score_other_player = eval_max(copy, SWITCH_PLAYER(player), depth -1)) < min && score_other_player != INT_MIN){
+			if((score_other_player = eval_max(copy, SWITCH_PLAYER(player), depth -1)) < min ){
 				min = score_other_player;
 				move = i;
 			}
@@ -93,8 +93,10 @@ int eval_min (Othello *othello, char player, int depth){
 
 		
 	}
-	if ( min == INT_MIN) 
+	if ( min == INT_MIN) {
+		print_othello(othello);
 		DEBUG_PRINTF("Depth %d\n", depth); 
+	}
 	return min;
 }
 
@@ -134,7 +136,7 @@ int eval_max (Othello *othello, char player, int depth){
 
 			change_value(copy, i, player);
 
-			if((score_other_player = eval_min(copy, SWITCH_PLAYER(player), depth -1)) > max && score_other_player != INT_MAX){
+			if((score_other_player = eval_min(copy, SWITCH_PLAYER(player), depth -1)) > max){
 				max = score_other_player;
 				move = i;
 			}
