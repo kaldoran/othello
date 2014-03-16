@@ -16,12 +16,15 @@ Othello* cpy_othello(Othello *othello){
 	Othello *copy = new_othello();
 	memcpy(copy->grid, othello->grid, GRID_SIZE * sizeof(char));
 
+	copy->nb_pawn_p1 = othello->nb_pawn_p1;
+	copy->nb_pawn_p2 = othello->nb_pawn_p2;
+
 	return copy;
 }
 
 /* Fonction MinMax qui retourne le meilleur coup à jouer */
 int minMax(Othello *othello, char player){
-	int bestMove, bestScore = INT_MIN, depth = DEPTH, i, tmp;
+	int bestMove = INT_MIN, bestScore = INT_MIN, depth = DEPTH, i, tmp;
 	Othello *copy = NULL;
 
 	for( i = 0; i < GRID_SIZE; ++i ){
