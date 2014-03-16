@@ -29,17 +29,21 @@ int minMax(Othello *othello, char player){
 
 	for( i = 0; i < GRID_SIZE; ++i ){
 
-		copy = cpy_othello(othello);
+		if(good_move(othello, i, player)){
 
-		if(pushPion(copy, i, player)){
+			copy = cpy_othello(othello);
+
+			change_value(copy, i, player);
 
 			if( (tmp = eval_min(copy, player, depth)) > bestScore){
 				bestScore = tmp;
 				bestMove = i;
 			}
+
+			free_othello(copy);
+
 		}
 
-		free_othello(copy);
 	}
 
 	return bestMove;
@@ -68,22 +72,25 @@ int eval_min (Othello *othello, char player, int depth){
    		 * récupéré je libère ma grille 
    		 * de cette façon sa me permet d'annuler le coup 
    		 * que je viens de jouer
-		 */
-		copy = cpy_othello(othello);
-
-		/* Je joue mon coup, si il est possible alors je vais  
+		 *
+		 * Je joue mon coup, si il est possible alors je vais  
 		 * chercher dans le coups suivant le meilleur des coups possibles
 		 * et je le teste avec mon min actuel
 		 */
-		if(pushPion(copy, i, player)){
+		if(good_move(othello, i, player)){
 
+			copy = cpy_othello(othello);
+
+			change_value(copy, i, player);
 			if((score_other_player = eval_max(copy, SWITCH_PLAYER(player), depth -1)) < min){
 				min = score_other_player;
 				move = i;
 			}
+
+			free_othello(copy);
 		}
 
-		free_othello(copy);
+
 		
 	}
 
@@ -115,22 +122,24 @@ int eval_max (Othello *othello, char player, int depth){
    		 * récupéré je libère ma grille 
    		 * de cette façon sa me permet d'annuler le coup 
    		 * que je viens de jouer
-		 */
-		copy = cpy_othello(othello);
-
-		/* Si ce coups est un bon coup je le fais et 
+		 *
+		 * Si ce coups est un bon coup je le fais et 
 		 * coups suivant le moins bon des coups possibles
 		 * et je le teste avec mon max actuel
 		 */
-		if(pushPion(copy, i, player)){
+		 if(good_move(othello, i, player)){
+			
+			copy = cpy_othello(othello);
+
+			change_value(copy, i, player);
 
 			if((score_other_player = eval_min(copy, SWITCH_PLAYER(player), depth -1)) > max){
 				max = score_other_player;
 				move = i;
 			}
-		}
 
-		free_othello(copy);
+			free_othello(copy);
+		}
 	}
 
 	return max;
