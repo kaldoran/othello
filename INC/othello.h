@@ -13,6 +13,7 @@
 
 #include "global.h"
 #include "struct_othello.h"
+#include "ia.h"
 
 /* Alloue la structure 
  * Ajout les pions au centre et initaliser les valeurs 
@@ -27,7 +28,10 @@ int good_move(Othello *othello, int position, char player);
 
 int move_left (Othello *othello, char player );
 
-void move_IA (Othello *othello, char player );
+void move_IA_alea(Othello *othello, char player);
+
+void move_IA_minMax(Othello *othello, char player);
+
 /* Affiche la grille d'othello
  */
 void print_othello(Othello *othello);

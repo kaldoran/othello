@@ -6,7 +6,7 @@
 #include "global.h"
 
 /* constante */
-#define DEPTH 5	/* profondeur max pour la recherche du minMax */
+#define DEPTH 5 /* profondeur max pour la recherche du minMax */
 
 /* Prototype de fonction */
 Othello* cpy_othello(Othello *othello);

@@ -264,7 +264,7 @@ int hasard(int max) { // fonction hassard , donne un nombre compris entre 0 et m
   return (int)  ((float) rand() / RAND_MAX * max );
 }
 
-void move_IA (Othello *othello, char player ) {
+void move_IA_alea(Othello *othello, char player ) {
 
 	int i,nb_coup_possible = 0;
 	int *coup_possible = NULL;
@@ -294,6 +294,23 @@ void move_IA (Othello *othello, char player ) {
 		
 	free(coup_possible);
 	return;
+}
+
+void move_IA_minmax(Othello *othello, char player){
+	int bestMove;
+
+	bestMove = minMax(othello, player);
+
+	if(bestMove != -1){
+		change_value(othello, bestMove, player);
+
+		printf("je vais jouer en %c %d - %d\n",  COLUMN(bestMove) ,ROW(bestMove), bestMove);
+	}
+
+	else
+		printf("Je suis bloqué :'( \n");
+			
+	return ;
 }
 
 int move_left (Othello *othello, char player ) {
@@ -387,11 +404,14 @@ void free_othello(Othello *othello){
 }
 
 void game(Othello *othello, char player, int nb_joueur_h) {
+	int nb_tour = 0;
 	while(othello->nb_pawn_p1 > 0 && othello->nb_pawn_p2 > 0 && (othello->nb_pawn_p2 + othello->nb_pawn_p1) != GRID_SIZE ) {
 		print_othello(othello);  /* Affichage de l'othello */
 		if ( nb_joueur_h == 2 || ( nb_joueur_h == 1 && player == 'X') ) othello_ask_choice(othello, player);		
-		if ( nb_joueur_h == 0 || ( nb_joueur_h == 1 && player == 'O') ) move_IA(othello, player);
+		if ( nb_joueur_h == 0 || ( nb_joueur_h == 1 && player == 'O') ) move_IA_minmax(othello, player);
 		player = SWITCH_PLAYER(player);
+		printf("Tour n° %d\n", nb_tour);
+		++nb_tour;
 	}
 }
 
