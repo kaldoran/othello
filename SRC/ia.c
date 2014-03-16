@@ -47,13 +47,13 @@ int minMax(Othello *othello, char player){
  * évaluation
  */
 int eval_min (Othello *othello, char player, int depth){
-	int i, min = INT_MAX, score_other_player;
+	int i, min = INT_MAX, score_other_player, move = 0;
 
 	Othello *copy = NULL;
 
 	if(depth == 0){
-		return eval_grid(othello, player);
-	}
+		return eval_grid(othello, player, move);
+	}	
 
 	/* Le i me sert pour les lignes */
 	for(i = 0; i < GRID_SIZE; ++i){
@@ -76,6 +76,7 @@ int eval_min (Othello *othello, char player, int depth){
 
 			if((score_other_player = eval_max(copy, SWITCH_PLAYER(player), depth -1)) < min){
 				min = score_other_player;
+				move = i;
 			}
 		}
 
@@ -92,12 +93,12 @@ int eval_min (Othello *othello, char player, int depth){
  * évaluation
  */
 int eval_max (Othello *othello, char player, int depth){
-	int i, max = INT_MIN, score_other_player;
+	int i, max = INT_MIN, score_other_player, move = 0;
 
 	Othello *copy = NULL;
 
 	if(depth == 0){
-		return eval_grid(othello, player);
+		return eval_grid(othello, player, move);
 	}
 
 
@@ -122,6 +123,7 @@ int eval_max (Othello *othello, char player, int depth){
 
 			if((score_other_player = eval_min(copy, SWITCH_PLAYER(player), depth -1)) > max){
 				max = score_other_player;
+				move = i;
 			}
 		}
 
@@ -136,17 +138,22 @@ int eval_max (Othello *othello, char player, int depth){
  * si la tendance est favorable au joueur player
  * ou alors à l'autre joueur
  */
-int eval_grid(Othello *othello, char player){
-	int eval, i;
-	for( i = 0; i < GRID_SIZE; ++i ){
-		if(othello->grid[i] == player){
-			eval += grid_eval[i];
-		}
+int eval_grid(Othello *othello, char player, int position_jouee){
+	int eval, g_eval;
+    if ( othello->nb_pawn_p1 + othello->nb_pawn_p2 < 40 ) {
+            if ( player == PAWN_J2 )
+                    eval = 100 * ( othello->nb_pawn_p1 - othello->nb_pawn_p2);
+            else
+                    eval = 100 * ( othello->nb_pawn_p2 - othello->nb_pawn_p1);
+    }
+    else {
+            if ( player == PAWN_J2 )
+                    eval = 200 * ( othello->nb_pawn_p2 - othello->nb_pawn_p1);
+            else
+                    eval = 200 * ( othello->nb_pawn_p1 - othello->nb_pawn_p2);
+    }
+     
+    g_eval = 150 * grid_eval[position_jouee];
 
-		else if(othello->grid[i] == SWITCH_PLAYER(player)){
-			eval -= grid_eval[i];
-		}
-	}
-
-	return eval;
+    return g_eval + eval;
 }
