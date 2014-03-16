@@ -7,7 +7,7 @@
 
 /* constante */
 #define DEPTH 5 /* profondeur max pour la recherche du minMax */
-
+#define WIN 100000
 
 /* Prototype de fonction */
 Othello* cpy_othello(Othello *othello);

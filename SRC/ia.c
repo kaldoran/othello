@@ -30,22 +30,22 @@ int minMax(Othello *othello, char player){
 	for( i = 0; i < GRID_SIZE; ++i ){
 
 		if(good_move(othello, i, player)){
-			DEBUG_PRINTF("Error ici - %c %d \n", COLUMN(i), ROW(i)); 
+
 			copy = cpy_othello(othello);
 
 			change_value(copy, i, player);
 
-			if( (tmp = eval_min(copy, player, depth)) > bestScore){
+			if( (tmp = eval_min(copy, player, depth)) >= bestScore){
 				bestScore = tmp;
 				bestMove = i;
 			}
-
+			DEBUG_PRINTF("Tmp %d \n", tmp); 
 			free_othello(copy);
-			DEBUG_PRINTF("Error %d\n", tmp); 
+
 		}
 
 	}
-	DEBUG_PRINTF("Error ici3\n"); 
+	DEBUG_PRINTF("Error ici3 %d - i : %d\n", bestScore, bestMove); 
 	return bestMove;
 }
 
@@ -55,7 +55,11 @@ int minMax(Othello *othello, char player){
  */
 int eval_min (Othello *othello, char player, int depth){
 	int i, min = INT_MAX, score_other_player, move = 0;
-
+	if ( othello->nb_pawn_p1 == 0 )
+		return (player == PAWN_J1) ? -WIN : WIN;
+	else if ( othello->nb_pawn_p2 == 0 )
+		return (player == PAWN_J1) ? WIN : -WIN;
+		
 	Othello *copy = NULL;
 
 	if(depth == 0){
@@ -77,8 +81,9 @@ int eval_min (Othello *othello, char player, int depth){
 		 * chercher dans le coups suivant le meilleur des coups possibles
 		 * et je le teste avec mon min actuel
 		 */
+		 	
 		if(good_move(othello, i, player)){
-
+		
 			copy = cpy_othello(othello);
 
 			change_value(copy, i, player);
@@ -93,10 +98,7 @@ int eval_min (Othello *othello, char player, int depth){
 
 		
 	}
-	if ( min == INT_MIN) {
-		print_othello(othello);
-		DEBUG_PRINTF("Depth %d\n", depth); 
-	}
+
 	return min;
 }
 
@@ -107,7 +109,12 @@ int eval_min (Othello *othello, char player, int depth){
  */
 int eval_max (Othello *othello, char player, int depth){
 	int i, max = INT_MIN, score_other_player, move = 0;
-
+	
+	if ( othello->nb_pawn_p1 == 0 )
+		return (player == PAWN_J1) ? WIN : -WIN;
+	else if ( othello->nb_pawn_p2 == 0 )
+		return (player == PAWN_J1) ? -WIN : WIN;
+		
 	Othello *copy = NULL;
 
 	if(depth == 0){
@@ -155,20 +162,19 @@ int eval_max (Othello *othello, char player, int depth){
  */
 int eval_grid(Othello *othello, char player, int position_jouee){
 	int eval, g_eval;
-    if ( othello->nb_pawn_p1 + othello->nb_pawn_p2 < 40 ) {
-            if ( player == PAWN_J2 )
-                    eval = 100 * ( othello->nb_pawn_p1 - othello->nb_pawn_p2);
-            else
-                    eval = 100 * ( othello->nb_pawn_p2 - othello->nb_pawn_p1);
-    }
-    else {
-            if ( player == PAWN_J2 )
-                    eval = 200 * ( othello->nb_pawn_p2 - othello->nb_pawn_p1);
-            else
-                    eval = 200 * ( othello->nb_pawn_p1 - othello->nb_pawn_p2);
-    }
+	if ( othello->nb_pawn_p1 + othello->nb_pawn_p2 < 30 ) {
+		if ( player == PAWN_J2 )
+			eval = 50 * ( othello->nb_pawn_p1 - othello->nb_pawn_p2);
+		else
+			eval = 50 * ( othello->nb_pawn_p2 - othello->nb_pawn_p1);
+	}
+	else {
+		if ( player == PAWN_J2 )
+			eval = 100 * ( othello->nb_pawn_p2 - othello->nb_pawn_p1);
+		else
+			eval = 100 * ( othello->nb_pawn_p1 - othello->nb_pawn_p2);
+	}
      
-    g_eval = 150 * grid_eval[position_jouee];
-
-    return g_eval + eval;
+	g_eval = 120 * grid_eval[position_jouee];
+	return g_eval + eval;
 }
