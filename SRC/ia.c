@@ -30,7 +30,7 @@ int minMax(Othello *othello, char player){
 	for( i = 0; i < GRID_SIZE; ++i ){
 
 		if(good_move(othello, i, player)){
-
+			DEBUG_PRINTF("Error ici - %c %d \n", COLUMN(i), ROW(i)); 
 			copy = cpy_othello(othello);
 
 			change_value(copy, i, player);
@@ -41,11 +41,11 @@ int minMax(Othello *othello, char player){
 			}
 
 			free_othello(copy);
-
+			DEBUG_PRINTF("Error %d\n", tmp); 
 		}
 
 	}
-
+	DEBUG_PRINTF("Error ici3\n"); 
 	return bestMove;
 }
 
@@ -82,7 +82,7 @@ int eval_min (Othello *othello, char player, int depth){
 			copy = cpy_othello(othello);
 
 			change_value(copy, i, player);
-			if((score_other_player = eval_max(copy, SWITCH_PLAYER(player), depth -1)) < min){
+			if((score_other_player = eval_max(copy, SWITCH_PLAYER(player), depth -1)) < min && score_other_player != INT_MIN){
 				min = score_other_player;
 				move = i;
 			}
@@ -93,7 +93,8 @@ int eval_min (Othello *othello, char player, int depth){
 
 		
 	}
-
+	if ( min == INT_MIN) 
+		DEBUG_PRINTF("Depth %d\n", depth); 
 	return min;
 }
 
@@ -133,7 +134,7 @@ int eval_max (Othello *othello, char player, int depth){
 
 			change_value(copy, i, player);
 
-			if((score_other_player = eval_min(copy, SWITCH_PLAYER(player), depth -1)) > max){
+			if((score_other_player = eval_min(copy, SWITCH_PLAYER(player), depth -1)) > max && score_other_player != INT_MAX){
 				max = score_other_player;
 				move = i;
 			}

@@ -298,12 +298,13 @@ void move_IA_alea(Othello *othello, char player ) {
 
 void move_IA_minmax(Othello *othello, char player){
 	int bestMove;
-
+	DEBUG_PRINTF("Here - \n"); 
 	bestMove = minMax(othello, player);
-
+	DEBUG_PRINTF("Here - %p - Best : %d - player : %c\n", othello, bestMove, player); 
 	if(bestMove != -1){
+		print_othello(othello);
 		change_value(othello, bestMove, player);
-
+		DEBUG_PRINTF("Here - 2 \n"); 
 		printf("je vais jouer en %c %d - %d\n",  COLUMN(bestMove) ,ROW(bestMove), bestMove);
 	}
 
