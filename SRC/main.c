@@ -36,14 +36,17 @@ int main(int argc, char *argv[]) {
 	}	
 
 	do {
-		othello = new_othello(); /* Crée un nouvelle othello */
+
 		_reset_term();
 		menu_principal();
 		choix = verif_choix("Quel est votre choix ? ",4);
 		videbuffer();
+
+		if ( choix == 1 || choix == 1 || choix == 3)
+			othello = new_othello(); /* Crée un nouvelle othello */
+			
 		switch(choix) {
 			case -1:
-				free_othello(othello);
 				printf("\t\tAu revoir et a bientôt\n");
 				pause_ms(1200);
 				_reset_term(); 
@@ -70,6 +73,9 @@ int main(int argc, char *argv[]) {
 				printf("-- Erreur --\tImpossible d'acceder au module %d.\n ",choix);
 			break;
 		}
+		
+		if ( choix == 1 || choix == 1 || choix == 3)
+			free_othello(othello);
 
 	} while ( 1 );
 	
