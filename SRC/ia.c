@@ -39,13 +39,13 @@ int minMax(Othello *othello, char player){
 				bestScore = tmp;
 				bestMove = i;
 			}
-			DEBUG_PRINTF("Tmp %d \n", tmp); 
+
 			free_othello(copy);
 
 		}
 
 	}
-	DEBUG_PRINTF("Error ici3 %d - i : %d\n", bestScore, bestMove); 
+
 	return bestMove;
 }
 
