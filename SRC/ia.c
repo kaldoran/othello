@@ -56,9 +56,9 @@ int minMax(Othello *othello, char player){
 int eval_min (Othello *othello, char player, int depth){
 	int i, min = INT_MAX, score_other_player, move = 0;
 	if ( othello->nb_pawn_p1 == 0 )
-		return (player == PAWN_J1) ? -WIN : WIN;
-	else if ( othello->nb_pawn_p2 == 0 )
 		return (player == PAWN_J1) ? WIN : -WIN;
+	else if ( othello->nb_pawn_p2 == 0 )
+		return (player == PAWN_J1) ? -WIN : WIN;
 		
 	Othello *copy = NULL;
 
@@ -111,9 +111,9 @@ int eval_max (Othello *othello, char player, int depth){
 	int i, max = INT_MIN, score_other_player, move = 0;
 	
 	if ( othello->nb_pawn_p1 == 0 )
-		return (player == PAWN_J1) ? WIN : -WIN;
-	else if ( othello->nb_pawn_p2 == 0 )
 		return (player == PAWN_J1) ? -WIN : WIN;
+	else if ( othello->nb_pawn_p2 == 0 )
+		return (player == PAWN_J1) ? WIN : -WIN;
 		
 	Othello *copy = NULL;
 
@@ -164,15 +164,15 @@ int eval_grid(Othello *othello, char player, int position_jouee){
 	int eval, g_eval;
 	if ( othello->nb_pawn_p1 + othello->nb_pawn_p2 < 35 ) {
 		if ( player == PAWN_J2 )
-			eval = 50 * ( othello->nb_pawn_p1 - othello->nb_pawn_p2);
-		else
-			eval = 50 * ( othello->nb_pawn_p2 - othello->nb_pawn_p1);
-	}
-	else {
-		if ( player == PAWN_J2 )
 			eval = 100 * ( othello->nb_pawn_p2 - othello->nb_pawn_p1);
 		else
 			eval = 100 * ( othello->nb_pawn_p1 - othello->nb_pawn_p2);
+	}
+	else {
+		if ( player == PAWN_J2 )
+			eval = 50 * ( othello->nb_pawn_p1 - othello->nb_pawn_p2);
+		else
+			eval = 50 * ( othello->nb_pawn_p2 - othello->nb_pawn_p1);
 	}
      
 	g_eval = 120 * grid_eval[position_jouee];
