@@ -179,9 +179,8 @@ int good_move(Othello *othello, int position, char player) {
 	
 	int i;
 	char inv_player = SWITCH_PLAYER(player);
-	
 	/* En verifiant le coup ça devrait aller mieu */
-	if (othello->grid[position] != 0 ) 
+	if (othello->grid[position] != 0 || position > GRID_SIZE || position < 0 ) 
 		return 0;
 	
 	/* Horizontal en partant sur la gauche */	
@@ -371,16 +370,18 @@ int verif_choix(char *phrase,int val_max) {
 
 	int choix;
 	while(1) {   
-		while(scanf("%2d",&choix) == 0) // Si l'utilisateur entre autre chose qu'un nombre
+		while(scanf("%2d",&choix) == 0) { // Si l'utilisateur entre autre chose qu'un nombre
 			printf("\t-- Erreur --\tLa valeur entrée n'est pas un nombre.\n%s",phrase); 
-			if(choix == -1 )
-				return choix;
-			if( (choix <= val_max && choix > 0) || choix == -1)
-				return choix;
-			else
-				printf("\t-- Erreur --\tLa valeur entrée est soit trop grande soit trop petite.\n%s",phrase);
+			videbuffer();
+		}
+		if(choix == -1 )
+			return choix;
+		if( (choix <= val_max && choix > 0) || choix == -1)
+			return choix;
+		else
+			printf("\t-- Erreur --\tLa valeur entrée est soit trop grande soit trop petite.\n%s",phrase);
   
-		videbuffer();
+
 	}
 	return -1;
 }
@@ -414,6 +415,7 @@ void game(Othello *othello, char player, int nb_joueur_h) {
 		printf("Tour n° %d\n", nb_tour);
 		++nb_tour;
 	}
+	print_othello(othello);  /* Affichage de l'othello */
 }
 
 

@@ -42,7 +42,7 @@ int main(int argc, char *argv[]) {
 		choix = verif_choix("Quel est votre choix ? ",4);
 		videbuffer();
 
-		if ( choix == 1 || choix == 1 || choix == 3)
+		if ( choix == 1 || choix == 2 || choix == 3)
 			othello = new_othello(); /* Crée un nouvelle othello */
 			
 		switch(choix) {
@@ -74,7 +74,7 @@ int main(int argc, char *argv[]) {
 			break;
 		}
 		
-		if ( choix == 1 || choix == 1 || choix == 3)
+		if ( choix == 1 || choix == 2 || choix == 3)
 			free_othello(othello);
 
 	} while ( 1 );

@@ -33,7 +33,7 @@ void videbuffer() {
 void do_pause() {
 
 	printf("Appuyer sur entrée pour continuer...");
-	videbuffer();
  	getchar();
+
 }
 
