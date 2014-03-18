@@ -4,6 +4,9 @@
 #include "othello.h"
 #include "time.h"
 
+#define COLOR  "\033[32m"
+#define NCOLOR "\033[0m"
+
 Othello *new_othello() {
 
 	Othello *othello;
@@ -354,13 +357,13 @@ void print_othello(Othello *othello) {
 	for (j = 0; j < W_SIDE; j++) {
 		printf("%d |", j + 1);
 		for(i = 0; i < W_SIDE; i++) {
-			if( (lettre = othello->grid[SQUARE(i,j)]) == PAWN_J1) printf("\033[30m %c \033[0m|", lettre);
+			if( (lettre = othello->grid[SQUARE(i,j)]) == PAWN_J1) printf("%s %c %s|",COLOR, lettre, NCOLOR);
 			else printf(" %c |", (lettre == PAWN_J2) ? lettre : lettre + 32 ); /* Lettre + 32 car 32 est le code ascii de l'espace */
 		}
 		print_ligne();
 	}
 	
-	printf("\n    Score \033[30mX\033[0m : %u   Score O : %u\n",othello->nb_pawn_p1, othello->nb_pawn_p2);
+	printf("\n    Score %sX%s : %u   Score O : %u\n",COLOR, NCOLOR, othello->nb_pawn_p1, othello->nb_pawn_p2);
  
 	return;
 }

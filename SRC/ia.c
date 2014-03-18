@@ -162,7 +162,7 @@ int eval_max (Othello *othello, char player, int depth){
  */
 int eval_grid(Othello *othello, char player, int position_jouee){
 	int eval, g_eval;
-	if ( othello->nb_pawn_p1 + othello->nb_pawn_p2 < 30 ) {
+	if ( othello->nb_pawn_p1 + othello->nb_pawn_p2 < 35 ) {
 		if ( player == PAWN_J2 )
 			eval = 50 * ( othello->nb_pawn_p1 - othello->nb_pawn_p2);
 		else
