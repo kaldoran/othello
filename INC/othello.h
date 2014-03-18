@@ -28,9 +28,9 @@ int good_move(Othello *othello, int position, char player);
 
 int move_left (Othello *othello, char player );
 
-void move_IA_alea(Othello *othello, char player);
+int move_IA_alea(Othello *othello, char player);
 
-void move_IA_minMax(Othello *othello, char player);
+int move_IA_minMax(Othello *othello, char player);
 
 /* Affiche la grille d'othello
  */
