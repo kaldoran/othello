@@ -24,7 +24,7 @@ Othello* cpy_othello(Othello *othello){
 
 /* Fonction MinMax qui retourne le meilleur coup à jouer */
 int minMax(Othello *othello, char player){
-	int bestMove = INT_MIN, bestScore = INT_MIN, depth = DEPTH, i, tmp;
+	int bestMove = -1, bestScore = INT_MIN, depth = DEPTH, i, tmp;
 	Othello *copy = NULL;
 
 	for( i = 0; i < GRID_SIZE; ++i ){
@@ -35,7 +35,7 @@ int minMax(Othello *othello, char player){
 
 			change_value(copy, i, player);
 
-			if( (tmp = eval_min(copy, player, depth)) >= bestScore){
+			if( (tmp = eval_min(copy, player, depth)) > bestScore){
 				bestScore = tmp;
 				bestMove = i;
 			}
@@ -162,6 +162,27 @@ int eval_max (Othello *othello, char player, int depth){
  */
 int eval_grid(Othello *othello, char player, int position_jouee){
 	int eval, g_eval;
+
+	if(player == PAWN_J2){
+		if(othello->nb_pawn_p2 == 0){
+			return INT_MAX;
+		}
+
+		if(othello->nb_pawn_p1 == 0){
+			return INT_MIN;
+		}
+	}
+
+	else {
+		if(othello->nb_pawn_p2 == 0){
+			return INT_MIN;
+		}
+
+		if(othello->nb_pawn_p1 == 0){
+			return INT_MAX;
+		}
+	}
+
 	if ( othello->nb_pawn_p1 + othello->nb_pawn_p2 < 35 ) {
 		if ( player == PAWN_J2 )
 			eval = 100 * ( othello->nb_pawn_p2 - othello->nb_pawn_p1);
