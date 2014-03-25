@@ -4,6 +4,12 @@
 - IA Améliorée 	[Fonction qui retourne le coup à jouer, a voir combien de profondeur on utilise]
 - IA ++			[ Min - Max + Alpha - Beta ]
 
+- IA [fonction evaluation] : j'ai vu sur pas mal de site
+	ce qui serait pas mal c'est : 
+		dans les 8 premier coups se laisser prendres les pions ( ce qu'on fait deja )
+		Entre les 16 et 48 premiers coups remonter en essayant de chercher les points décisifs
+		Dans les 16 derniers coups vouloir la victoire !!!
+
 - Stats 
 	-- j'ai deja
 - EE
