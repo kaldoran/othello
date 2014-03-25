@@ -196,3 +196,38 @@ int eval_grid(Othello *othello, char player, int position_jouee){
 	g_eval = 120 * grid_eval[position_jouee];
 	return g_eval + eval;
 }
+
+
+int alphabeta(Othello *othello, char player, int depth, int alpha, int beta){
+	int bestMove = 0, score = 0, i;
+
+	Othello *copy = NULL;
+
+	if(depth == 0)
+		return eval_grid(othello, player, bestMove);
+
+	for(i = 0; i < GRID_SIZE; ++i){
+
+		if(good_move(othello, i, player)){
+			
+			copy = cpy_othello(othello);
+
+			change_value(copy, i, player);
+
+			if((score = -alphabeta(copy, SWITCH_PLAYER(player), depth-1, -beta, -alpha)) >= alpha){
+				alpha = score;
+				bestMove = i;
+
+
+				if(alpha >= beta){
+					free_othello(copy);
+					break;
+				}
+			}
+
+			free_othello(copy);
+		}
+	}
+
+	return alpha;
+}
