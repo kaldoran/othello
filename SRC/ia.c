@@ -22,6 +22,33 @@ Othello* cpy_othello(Othello *othello){
 	return copy;
 }
 
+int minMax_alphabeta(Othello *othello, char player){
+	int bestMove = -1, bestScore = INT_MIN, depth = DEPTH, i, tmp;
+	int alpha = INT_MIN, beta = INT_MAX;
+	Othello *copy = NULL;
+
+	for( i = 0; i < GRID_SIZE; ++i ){
+
+		if(good_move(othello, i, player)){
+
+			copy = cpy_othello(othello);
+
+			change_value(copy, i, player);
+
+			if( (tmp = alphabeta(copy, player, depth, alpha, beta)) > bestScore){
+				bestScore = tmp;
+				bestMove = i;
+			}
+
+			free_othello(copy);
+
+		}
+
+	}
+
+	return bestMove;
+}
+
 /* Fonction MinMax qui retourne le meilleur coup à jouer */
 int minMax(Othello *othello, char player){
 	int bestMove = -1, bestScore = INT_MIN, depth = DEPTH, i, tmp;

@@ -32,6 +32,9 @@ int move_IA_alea(Othello *othello, char player);
 
 int move_IA_minMax(Othello *othello, char player);
 
+int move_IA_minMax_alphabeta(Othello *othello, char player);
+
+
 /* Affiche la grille d'othello
  */
 void print_othello(Othello *othello);

@@ -300,6 +300,25 @@ int move_IA_alea(Othello *othello, char player ) {
 	return 0;
 }
 
+
+int move_IA_minmax_alphabeta(Othello *othello, char player){
+	int bestMove;
+
+	bestMove = minMax_alphabeta(othello, player);
+
+	if(bestMove != -1){
+		print_othello(othello);
+		change_value(othello, bestMove, player);
+
+		printf("je vais jouer en %c %d - %d\n",  COLUMN(bestMove) ,ROW(bestMove), bestMove);
+		return 1;
+	}
+	
+	printf("Je suis bloqué :'( \n");
+			
+	return 0;
+}
+
 int move_IA_minmax(Othello *othello, char player){
 	int bestMove;
 
@@ -420,7 +439,7 @@ void game(Othello *othello, char player, int nb_joueur_h) {
 			if ( ! othello_ask_choice(othello, player) )
 				oops--;		
 		if ( nb_joueur_h == 0 || ( nb_joueur_h == 1 && player == 'O') ) 
-			if ( ! move_IA_minmax(othello, player) ) 
+			if ( ! move_IA_minmax_alphabeta(othello, player) ) 
 				oops--;
 		player = SWITCH_PLAYER(player);
 		printf("Tour n° %d\n", nb_tour);
