@@ -22,32 +22,15 @@ Othello* cpy_othello(Othello *othello){
 	return copy;
 }
 
-int minMax_alphabeta(Othello *othello, char player){
-	int bestMove = -1, bestScore = INT_MIN, depth = DEPTH, i, tmp;
-	int alpha = INT_MIN, beta = INT_MAX;
-	Othello *copy = NULL;
 
-	for( i = 0; i < GRID_SIZE; ++i ){
+	/*
+	 * Fonction de Minmax :
+	 * 			- la fonction minMax
+	 *          - la fonction MinMax_negamax
+	 *			- eval_min
+	 *			- eval_max
+	 */
 
-		if(good_move(othello, i, player)){
-
-			copy = cpy_othello(othello);
-
-			change_value(copy, i, player);
-
-			if( (tmp = alphabeta(copy, player, depth, alpha, beta)) > bestScore){
-				bestScore = tmp;
-				bestMove = i;
-			}
-
-			free_othello(copy);
-
-		}
-
-	}
-
-	return bestMove;
-}
 
 /* Fonction MinMax qui retourne le meilleur coup à jouer */
 int minMax(Othello *othello, char player){
@@ -76,6 +59,76 @@ int minMax(Othello *othello, char player){
 	return bestMove;
 }
 
+
+/* Cette fonction reprends le minMax mais en 
+ * convention negamax
+ * Il s'agit juste d'une optimisation 
+ * du code à proprement parler 
+ * sa ne change en rien sa fonctionnalité
+ * c'est à dire qu'elle agit exactement
+ * comme le Minmax "traditionnel"
+ */
+
+ int MinMax_negamax(Othello *othello, char player){
+	int bestMove = -1, bestScore = INT_MIN, depth = DEPTH, i, tmp;
+	Othello *copy = NULL;
+
+	for( i = 0; i < GRID_SIZE; ++i ){
+
+		if(good_move(othello, i, player)){
+
+			copy = cpy_othello(othello);
+
+			change_value(copy, i, player);
+
+			if( (tmp = negamax(copy, player, depth)) > bestScore){
+				bestScore = tmp;
+				bestMove = i;
+			}
+
+			free_othello(copy);
+
+		}
+
+	}
+
+	return bestMove;
+}
+
+/* Fonction negamax 
+ * qui remplace les eval_min et eval_max
+ */
+int negamax(Othello *othello, char player, int depth){
+
+	int bestMove = -1, bestScore = INT_MIN, score, i;
+
+	Othello *copy = NULL;
+
+	if(depth == 0 || (gameOver(othello) != 0))
+		return eval_grid(othello, player, bestMove);
+
+	for(i = 0; i < GRID_SIZE; ++i){
+
+		if(good_move(othello, i, player)){
+			
+			copy = cpy_othello(othello);
+
+			change_value(copy, i, player);
+
+			if((score = -negamax(othello, SWITCH_PLAYER(player), depth-1)) >= bestScore){
+				bestScore = score;
+				bestMove = i;
+			}
+
+			free_othello(copy);
+		}
+	}
+
+	return bestScore;	
+}
+
+
+
 /* Fonction qui évalue tous les coups possibles à jouer
  * et qui choisit le coup ayant l'évalution la plus petite
  * évaluation
@@ -89,7 +142,7 @@ int eval_min (Othello *othello, char player, int depth){
 		
 	Othello *copy = NULL;
 
-	if(depth == 0){
+	if(depth == 0 || (gameOver(othello) != 0)){
 		return eval_grid(othello, player, move);
 	}	
 
@@ -141,7 +194,7 @@ int eval_max (Othello *othello, char player, int depth){
 		
 	Othello *copy = NULL;
 
-	if(depth == 0){
+	if(depth == 0 || (gameOver(othello) != 0)){
 		return eval_grid(othello, player, move);
 	}
 
@@ -179,6 +232,80 @@ int eval_max (Othello *othello, char player, int depth){
 	return max;
 }
 
+
+		/*
+		 * Fonction minmax avec élagage alpha beta :
+		 * 				- minMax_alphabeta
+		 *				- alphabeta en convention negamax
+		 */
+
+int minMax_alphabeta(Othello *othello, char player){
+	int bestMove = -1, bestScore = INT_MIN, depth = DEPTH, i, tmp;
+	int alpha = INT_MIN, beta = INT_MAX;
+	Othello *copy = NULL;
+
+	for( i = 0; i < GRID_SIZE; ++i ){
+
+		if(good_move(othello, i, player)){
+
+			copy = cpy_othello(othello);
+
+			change_value(copy, i, player);
+
+			if( (tmp = alphabeta(copy, player, depth, alpha, beta)) > bestScore){
+				bestScore = tmp;
+				bestMove = i;
+			}
+
+			free_othello(copy);
+
+		}
+
+	}
+
+	return bestMove;
+}
+
+int alphabeta(Othello *othello, char player, int depth, int alpha, int beta){
+	int bestMove = -1, score = 0, i;
+
+	Othello *copy = NULL;
+
+	if(depth == 0 || (gameOver(othello) != 0))
+		return eval_grid(othello, player, bestMove);
+
+	for(i = 0; i < GRID_SIZE; ++i){
+
+		if(good_move(othello, i, player)){
+			
+			copy = cpy_othello(othello);
+
+			change_value(copy, i, player);
+
+			if((score = -alphabeta(copy, SWITCH_PLAYER(player), depth-1, -beta, -alpha)) >= alpha){
+				alpha = score;
+				bestMove = i;
+
+
+				if(alpha >= beta){
+					free_othello(copy);
+					break;
+				}
+			}
+
+			free_othello(copy);
+		}
+	}
+
+	return alpha;
+}
+
+
+
+		/* 
+		 * Fonction d'évaluation IA :
+		 * 				- eval_grid
+		 */
 
 /* Fonction qui évalue l'état de la grille
  * si la tendance est favorable au joueur player
@@ -222,39 +349,4 @@ int eval_grid(Othello *othello, char player, int position_jouee){
      
 	g_eval = 120 * grid_eval[position_jouee];
 	return g_eval + eval;
-}
-
-
-int alphabeta(Othello *othello, char player, int depth, int alpha, int beta){
-	int bestMove = 0, score = 0, i;
-
-	Othello *copy = NULL;
-
-	if(depth == 0)
-		return eval_grid(othello, player, bestMove);
-
-	for(i = 0; i < GRID_SIZE; ++i){
-
-		if(good_move(othello, i, player)){
-			
-			copy = cpy_othello(othello);
-
-			change_value(copy, i, player);
-
-			if((score = -alphabeta(copy, SWITCH_PLAYER(player), depth-1, -beta, -alpha)) >= alpha){
-				alpha = score;
-				bestMove = i;
-
-
-				if(alpha >= beta){
-					free_othello(copy);
-					break;
-				}
-			}
-
-			free_othello(copy);
-		}
-	}
-
-	return alpha;
 }

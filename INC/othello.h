@@ -55,4 +55,10 @@ int pushPion(Othello *othello, int position, char player);
 
 /* permet de lancer un jeu */
 void game(Othello *othello, char player, int nb_joueur_h);
+
+/* Fonction qui détermine 
+ * si le jeu est terminé et qui à gagné 
+ */
+int gameOver(Othello *othello);
+
 #endif

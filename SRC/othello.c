@@ -449,3 +449,19 @@ void game(Othello *othello, char player, int nb_joueur_h) {
 }
 
 
+int gameOver(Othello *othello){
+	if(othello->nb_pawn_p1 + othello->nb_pawn_p2 == GRID_SIZE){
+		if(othello->nb_pawn_p1 > othello->nb_pawn_p2)
+			return 1; /* Player 1 qui gagne */
+		else 
+			return 2; /* Player 2 qui gagne */
+	}
+
+	if(othello->nb_pawn_p2 == 0)
+		return 1; /* Player 1 qui gagne */
+
+	if(othello->nb_pawn_p1 == 0)
+		return 2; /* Player 2 qui gagne */
+
+	return 0; /* Partie pas encore terminée */
+}

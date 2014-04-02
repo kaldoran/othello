@@ -12,6 +12,8 @@
 /* Prototype de fonction */
 Othello* cpy_othello(Othello *othello);
 int minMax(Othello *othello, char player);
+int MinMax_negamax(Othello *othello, char player);
+int negamax(Othello *othello, char player, int depth);
 int eval_min(Othello *othello, char player, int depth);
 int eval_max(Othello *othello, char player, int depth);
 int eval_grid(Othello *othello, char player, int move);
