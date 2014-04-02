@@ -236,7 +236,9 @@ int eval_max (Othello *othello, char player, int depth){
 		/*
 		 * Fonction minmax avec élagage alpha beta :
 		 * 				- minMax_alphabeta
+		 *				- minMax_alphabeta_pvs
 		 *				- alphabeta en convention negamax
+		 *				- alphabeta avec algorithme de Principal Variation Search
 		 */
 
 int minMax_alphabeta(Othello *othello, char player){
@@ -265,6 +267,36 @@ int minMax_alphabeta(Othello *othello, char player){
 
 	return bestMove;
 }
+
+int minMax_alphabeta_pvs(Othello *othello, char player){
+	int bestMove = -1, bestScore = INT_MIN, depth = DEPTH, i, tmp;
+	int alpha = INT_MIN, beta = INT_MAX;
+	Othello *copy = NULL;
+
+	for( i = 0; i < GRID_SIZE; ++i ){
+
+		if(good_move(othello, i, player)){
+
+			copy = cpy_othello(othello);
+
+			change_value(copy, i, player);
+
+			if( (tmp = alphabeta_pvs(copy, player, depth, alpha, beta)) > bestScore){
+				bestScore = tmp;
+				bestMove = i;
+			}
+
+			free_othello(copy);
+
+		}
+
+	}
+
+	return bestMove;
+}
+
+
+
 
 int alphabeta(Othello *othello, char player, int depth, int alpha, int beta){
 	int bestMove = -1, score = 0, i;
@@ -298,6 +330,70 @@ int alphabeta(Othello *othello, char player, int depth, int alpha, int beta){
 	}
 
 	return alpha;
+}
+
+
+/* Fonction d'elagage alphabeta Negascout
+ * ou PVS : Principal Variation search
+ */
+int alphabeta_pvs(Othello *othello, char player, int depth, int alpha, int beta){
+	int bestMove = -1, score = 0, i, current = 0;
+
+	Othello *copy = NULL;
+
+	if(depth == 0 || (gameOver(othello) != 0))
+		return eval_grid(othello, player, bestMove);
+
+	/* Dans cette boucle je récupère le premier coup
+	 * jouable puis je quitte la boucle 
+	 */
+	for(i = 0; i < GRID_SIZE; ++i){
+		if(good_move(othello, i, player)){
+			
+			copy = cpy_othello(othello);
+			change_value(copy, i, player);
+
+			break;
+		}
+	}
+
+	current = -alphabeta_pvs(copy, SWITCH_PLAYER(player), depth-1, -beta, -alpha);
+
+	free_othello(copy);
+	copy = NULL;
+
+	if(current >= alpha)
+		alpha = current;
+	if(current < beta){
+		for(; i < GRID_SIZE; ++i){
+			if(good_move(othello, i, player)){
+			
+				copy = cpy_othello(othello);
+				change_value(copy, i, player);
+
+				score = -alphabeta_pvs(copy, SWITCH_PLAYER(player), depth-1, -(alpha+1), -alpha);
+
+				if(score > alpha && score < beta)
+					score = -alphabeta_pvs(copy, SWITCH_PLAYER(player), depth-1, -beta, -alpha);
+
+				free_othello(copy);
+
+				if(score >= current){
+					current = score;
+					bestMove = i;
+
+					if(score >= alpha){
+						alpha = score;
+
+						if(score >= beta)
+							break;
+					}
+				}
+			}
+		}
+	}
+	
+	return current;
 }
 
 

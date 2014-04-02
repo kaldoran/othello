@@ -301,6 +301,24 @@ int move_IA_alea(Othello *othello, char player ) {
 }
 
 
+int move_IA_minmax_alphabeta_pvs(Othello *othello, char player){
+	int bestMove;
+
+	bestMove = minMax_alphabeta_pvs(othello, player);
+
+	if(bestMove != -1){
+		print_othello(othello);
+		change_value(othello, bestMove, player);
+
+		printf("je vais jouer en %c %d - %d\n",  COLUMN(bestMove) ,ROW(bestMove), bestMove);
+		return 1;
+	}
+	
+	printf("Je suis bloqué :'( \n");
+			
+	return 0;
+}
+
 int move_IA_minmax_alphabeta(Othello *othello, char player){
 	int bestMove;
 

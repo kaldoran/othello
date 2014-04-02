@@ -19,5 +19,7 @@ int eval_max(Othello *othello, char player, int depth);
 int eval_grid(Othello *othello, char player, int move);
 int alphabeta(Othello *othello, char player, int depth, int alpha, int beta);
 int minMax_alphabeta(Othello *othello, char player);
+int alphabeta_pvs(Othello *othello, char player, int depth, int alpha, int beta);
+int minMax_alphabeta_pvs(Othello *othello, char player);
 
 #endif /* _IA_H_ included */
