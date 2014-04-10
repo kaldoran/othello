@@ -1,3 +1,4 @@
+
 #include "ia.h"
 
 
@@ -272,7 +273,7 @@ int minMax_alphabeta_pvs(Othello *othello, char player){
 	int bestMove = -1, bestScore = INT_MIN, depth = DEPTH, i, tmp;
 	int alpha = INT_MIN, beta = INT_MAX;
 	Othello *copy = NULL;
-
+ 
 	for( i = 0; i < GRID_SIZE; ++i ){
 
 		if(good_move(othello, i, player)){
@@ -355,6 +356,16 @@ int alphabeta_pvs(Othello *othello, char player, int depth, int alpha, int beta)
 
 			break;
 		}
+	}
+
+	if (copy == NULL)
+	{
+		/* code */
+		if(player == "X"){
+			return INT_MIN + (DEPTH-depth);
+		}
+
+		return INT_MAX - (DEPTH-depth);
 	}
 
 	current = -alphabeta_pvs(copy, SWITCH_PLAYER(player), depth-1, -beta, -alpha);
