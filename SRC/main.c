@@ -65,6 +65,10 @@ int main(int argc, char *argv[]) {
 				do_pause();
 			break;
 			case 4:
+				printf("Connection\n");
+				do_pause();
+			break;
+			case 5:
 				_clean();
 				afficher_regles();
 				do_pause();

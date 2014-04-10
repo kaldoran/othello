@@ -14,7 +14,8 @@ void menu_principal() {
 	printf("\t[1] Humain Vs Humain\n");
 	printf("\t[2] Humain Vs Ordi\n");
 	printf("\t[3] Ordi Vs Ordi\n");
-	printf("\t[4] Regles\n");
+	printf("\t[4] Connection serveur\n");
+	printf("\t[5] Regles\n");
 	printf("\t[-1] Quitter\n\n");  
 
 	printf("Quel est votre choix ? ");

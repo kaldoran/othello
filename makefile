@@ -52,4 +52,4 @@ clean:
 	@find . -name \*~ -exec rm \-fv {} \;
 	@echo  "\t"Le programme $(BIN) a bien été supprimé
 
-rebuild: uninstall install
+rebuild: uninstall creatdir install

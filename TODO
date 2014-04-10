@@ -3,6 +3,7 @@
 
 - IA Améliorée 	[Fonction qui retourne le coup à jouer, a voir combien de profondeur on utilise]
 - IA ++			[ Min - Max + Alpha - Beta ]
+--- Etrange du ne modifi pas le Beta.
 
 - IA [fonction evaluation] : j'ai vu sur pas mal de site
 	ce qui serait pas mal c'est : 

@@ -2,5 +2,5 @@
 # Cependant merci de respecter la structure du type :
 # Nom:valeur
 Pseudo:Othello_Othello_Ouistiti
-Ip:127.0.0.1
+Ip:87.231.166.227
 Port:16384
