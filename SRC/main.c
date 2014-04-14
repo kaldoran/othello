@@ -7,7 +7,7 @@
 #include "othello.h"
 #include "affichage.h"
 #include "gestion_fichier.h"
-
+#include "ia.h" 
 
 void convert(Othello *othello, char received[66]) {
 	int i = 0;
@@ -18,7 +18,6 @@ void convert(Othello *othello, char received[66]) {
 		othello->grid[i] = received[i]; /* un memcpy aurait fait de meme mais vu que je compte le nombre de pion au passage ..... */
 	}
 	
-	return;
 }
 
 int main(int argc, char *argv[]) {
@@ -68,7 +67,7 @@ int main(int argc, char *argv[]) {
 				
 				if ( received[0] != 'F' ) {
 					convert(othello, received);
-					/*received[0] = move_IA_minMax_alphabeta(othello, (char)received[0]);*/
+					received[0] = minMax_alphabeta(othello, received[0]);
 				
 					/* Calcul IA */
 					if ( tcp_action(config, &received[0], 1, SEND) <= 0 )
