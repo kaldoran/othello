@@ -58,7 +58,8 @@ void charger_configuration(Configuration *config) {
 
 			if ( (ret = startWith("Pseudo:",ligne_lue)) != NULL ) /* Si la ligne commence par */
 				strcpy(config->pseudo, ret);
-
+			if ( (ret = startWith("Mdp:", ligne_lue)) != NULL )
+				strcpy(config->password, ret);
 			if ( (ret = startWith("Ip:",ligne_lue)) != NULL ) { /* Si la ligne commence par */
 				if((h = gethostbyname(ret)) == NULL)	
 					return;

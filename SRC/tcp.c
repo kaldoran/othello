@@ -27,8 +27,9 @@ int tcp_start(Configuration *config) {
 int tcp_action(Configuration *config, void *data, int data_length, int type) {
 	if ( type == SEND ) 
 		return send(config->id_socket, data, data_length, 0);
-	else if ( type == RECEIVED )
+	else if ( type == RECEIVED ) {
 		return recv(config->id_socket, data, data_length, 0);
+	}
 	else 
 		return -1;
 }

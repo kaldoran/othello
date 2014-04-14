@@ -32,5 +32,8 @@ void menu_IA_vs_H();
 /* Affiche l'encadrer Ordinateur contre Ordinateur */ 
 void msg_IA_vs_IA();
 
+/* Affiche les choix posibles pour une partie en réseau */
+void choix_tcp();
+
 
 #endif /* AFFICHAGE_H inclu */

@@ -421,6 +421,7 @@ int eval_grid(Othello *othello, char player, int position_jouee){
 	}
 
 	else {
+
 		if(othello->nb_pawn_p2 == 0){
 			return INT_MIN;
 		}

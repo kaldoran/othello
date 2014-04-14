@@ -46,3 +46,11 @@ void menu_IA_vs_H() {
 void msg_IA_vs_IA() {
 	printf("\t\t\t  ---------------------------------\n\t\t\t| Ordinateur contre Ordinateur |\n\t\t\t  ---------------------------------\n\n");
 }
+
+void choix_tcp() {
+	printf("Choissez le type d'inscription au serveur :\n");
+	printf("\t[1] - PS\n");
+	printf("\t[2] - PS IA\n");
+	printf("\t[3] - TOURNAMENT\n");
+	printf("\t[-1] Retour\n\n");
+}
