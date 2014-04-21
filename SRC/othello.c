@@ -416,8 +416,7 @@ int verif_choix(char *phrase,int val_max) {
 			printf("\t-- Erreur --\tLa valeur entrée n'est pas un nombre.\n%s",phrase); 
 			videbuffer();
 		}
-		if(choix == -1 )
-			return choix;
+
 		if( (choix <= val_max && choix > 0) || choix == -1)
 			return choix;
 		else

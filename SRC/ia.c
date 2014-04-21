@@ -361,7 +361,7 @@ int alphabeta_pvs(Othello *othello, char player, int depth, int alpha, int beta)
 	if (copy == NULL)
 	{
 		/* code */
-		if(player == "X"){
+		if(player == PAWN_J1){
 			return INT_MIN + (DEPTH-depth);
 		}
 

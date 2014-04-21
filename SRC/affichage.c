@@ -52,5 +52,15 @@ void choix_tcp() {
 	printf("\t[1] - PS\n");
 	printf("\t[2] - PS IA\n");
 	printf("\t[3] - TOURNAMENT\n");
+	#if DEBUG
+	printf("\t[4] - TEST\n");
+	#endif
+	printf("\t[-1] Retour\n\n");
+}
+
+void choix_serv() {
+	printf("Choissez le serveur :\n");
+	printf("\t[1] - Serveur Aurélien\n");
+	printf("\t[2] - Serveur Anas hakim\n");
 	printf("\t[-1] Retour\n\n");
 }

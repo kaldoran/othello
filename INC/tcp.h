@@ -11,6 +11,7 @@
 #include <netdb.h>
 #include "global.h"
 #include "struct_config.h"
+#include "struct_othello.h"
 
 #define SEND 0
 #define RECEIVED 1
@@ -29,4 +30,15 @@ int tcp_start(Configuration *config);
 
 int tcp_action(Configuration *config, void *data, int data_length, int type);
 
+/* 
+ * Se connecte aux serveur 
+ * Si serv == 1 
+ * serveur 1 [ qui a des choses différentes du 2 ]
+ * sinon si serv == 2
+ * on est sur le serveur 2
+ */
+int serveur( Othello *othello, int serv);
+
+/* Converti le plateau pour le donner a l'ia */
+void convert(Othello *othello, char received[66]);
 #endif

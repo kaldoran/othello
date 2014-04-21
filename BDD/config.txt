@@ -2,6 +2,6 @@
 # Cependant merci de respecter la structure du type :
 # Nom:valeur
 Pseudo:Reynaud
-Mdp:
+Mdp:tjrn
 Ip:87.231.166.227
 Port:16384
