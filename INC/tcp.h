@@ -40,5 +40,8 @@ int tcp_action(Configuration *config, void *data, int data_length, int type);
 int serveur( Othello *othello, int serv);
 
 /* Converti le plateau pour le donner a l'ia */
-void convert(Othello *othello, char received[66]);
+Othello *convert(Othello *othello, char received[66]);
+
+/* reinit un tableau */
+void reinit_tab(void *data);
 #endif

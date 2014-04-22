@@ -19,7 +19,6 @@ int main(int argc, char *argv[]) {
 		_reset_term();
 		menu_principal();
 		choix = verif_choix("Quel est votre choix ? ",4);
-		videbuffer();
 
 		if ( choix >= 1 || choix <= 4)
 			othello = new_othello(); /* Crée un nouvelle othello */
@@ -48,7 +47,7 @@ int main(int argc, char *argv[]) {
 				printf("Pensez a changer les infos de BDD/config.txt avant de continuer\n");
 				choix_serv();
 				choix = verif_choix("Quel est votre choix ? ", 2);
-				videbuffer();
+
 				if ( choix != -1 ) 
 					if (serveur(othello, choix) == -1 ) 
 						fprintf(stderr,"Probleme avec le serveur\n");

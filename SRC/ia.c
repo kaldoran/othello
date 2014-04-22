@@ -243,6 +243,7 @@ int eval_max (Othello *othello, char player, int depth){
 		 */
 
 int minMax_alphabeta(Othello *othello, char player){
+
 	int bestMove = -1, bestScore = INT_MIN, depth = DEPTH, i, tmp;
 	int alpha = INT_MIN, beta = INT_MAX;
 	Othello *copy = NULL;

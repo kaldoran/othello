@@ -3,6 +3,15 @@
 #include "affichage.h"
 #include "gestion_fichier.h"
 
+#define LG_TAB 66
+
+#if DEBUG
+	#define AFFICHE(DATA) printf("Recu : %s.\n", (char *)DATA);
+#else 
+	#define AFFICHE(DATA) ;
+#endif
+	
+	
 void new_socket(Configuration *config) {
 	/* creation de la socket */
 	config->id_socket = socket(AF_INET,SOCK_STREAM,0); /* socket internet TCP */ 
@@ -28,6 +37,7 @@ int tcp_start(Configuration *config) {
 }
 
 int tcp_action(Configuration *config, void *data, int data_length, int type) {
+	
 	if ( type == SEND ) 
 		return send(config->id_socket, data, data_length, 0);
 	else if ( type == RECEIVED ) {
@@ -41,22 +51,44 @@ int serveur(Othello *othello, int serv) {
 	Configuration *config = nouvelle_configuration();
 	charger_configuration(config);
 
-	char received[66];
+	char received[LG_TAB];
 	int choix;
 	new_socket(config);
+	
+	if ( serv == 1 ) {
+		printf("Ajout \\n\n");
+		strcat(config->pseudo, "\n");
+		strcat(config->password, "\n");
+	}
+	
+	printf("Début tcp\n");
 	if (tcp_start(config)) {
 
 		printf("User - RECEIVED %d\n", tcp_action(config, &received, sizeof(received), RECEIVED)); 
-		printf("SEND : Envoi de données Pseudo %d\n",tcp_action(config, config->pseudo, 64, SEND));
+		AFFICHE(received);
+		reinit_tab(&received);
 		
+		printf("\nSEND : Envoi de données Pseudo %d\n",tcp_action(config, config->pseudo, 64, SEND));
+
 		printf("Password - RECEIVED %d\n", tcp_action(config, &received, sizeof(received), RECEIVED)); 
+		AFFICHE(received);
+		reinit_tab(&received);
+		
 		printf("SEND : Envoi de données Mdp : %d\n", tcp_action(config, config->password, 64, SEND));
 
-		printf("[connect ou type] RECEIVED %d\n", tcp_action(config, &received, sizeof(received), RECEIVED)); 
-		if ( serv == 1 )
-			if (strcasecmp(received, "connecte"))
+		printf("[connect ou type] RECEIVED %d\n", tcp_action(config, &received, sizeof(received), RECEIVED));
+		AFFICHE(received);
+		reinit_tab(&received);	
+		
+		if ( serv == 1 ) {
+			if (strcmp(received, "connecte") > 0)
 				return -1;
+			
+			while ( (choix = tcp_action(config, &received, sizeof(received), RECEIVED)) == LG_TAB )
+				reinit_tab(&received);
 
+		}
+		
 		choix_tcp();
 		#if DEBUG 
 			choix = verif_choix("Quel est votre choix ? ",4);
@@ -65,42 +97,54 @@ int serveur(Othello *othello, int serv) {
 		#endif
 		switch (choix ) {
 			case 1:
-				printf("SEND : Envoi de données Type : %d\n",tcp_action(config, "PS", 2, SEND));
+				printf("SEND : Envoi de données Type : %d\n",tcp_action(config, "PS\n", 3, SEND));
 				break;
 			case 2:
-				printf("SEND : Envoi de données Type : %d\n",tcp_action(config, "PS IA", 5, SEND));
+				printf("SEND : Envoi de données Type : %d\n",tcp_action(config, "PS IA\n", 6, SEND));
 				break;
 			case 3:
-				printf("SEND : Envoi de données Type : %d\n",tcp_action(config, "TOURNAMENT", 10, SEND));
+				printf("SEND : Envoi de données Type : %d\n",tcp_action(config, "TOURNAMENT\n", 11, SEND));
 				break;
 			#if DEBUG
 			case 4:
-				printf("SEND : Envoi de donnée tupe : %d\n", tcp_action(config, "TEST", 4, SEND));
+				printf("SEND : Envoi de donnée type : %d\n", tcp_action(config, "TEST\n", 5, SEND));
 				break;
 			#endif
 			default:
 				return 0;
 				break;
 		}
-		
-		printf("RECEIVED %d\n", tcp_action(config, &received, sizeof(received), RECEIVED)); 
-		if (strcasecmp(received, "ok"))
-			return -1;
-				
-		do{
-			printf("RECEIVED %d\n", tcp_action(config, &received, sizeof(received), RECEIVED)); 
-			for ( choix = 0; choix != 66; choix ++)
-				printf("%c", received[choix]);
-			
-			if ( received[0] != 'F' ) {
-				convert(othello, received);
-				received[0] = minMax_alphabeta(othello, received[0]);
-				DEBUG_PRINTF("Je joue en %c", received[0]);	
 
-				if ( tcp_action(config, &received[0], 1, SEND) <= 0 )
+		printf("RECEIVED %d\n", tcp_action(config, &received, sizeof(received), RECEIVED)); 
+		AFFICHE(received);
+
+		if (strcmp(received, "OK"))
+			return -1;
+
+		do{
+			choix = 0;
+			/* +1 ici pour cause, un \0 a été ajouté, ce qui fait ... 67 caracteres
+			 * Et si je ne le lis pas, je l'aurais au prochain tour de boucle 
+			 */
+			printf("RECEIVED %d\n", tcp_action(config, &received, sizeof(received) + 1, RECEIVED)); 
+			AFFICHE(received);
+			if ( received[1] != 'F' ) {
+				othello = convert(othello, received);
+				
+/*		VERSION SELON LES NORMES
+				received[0] = minMax_alphabeta(othello, received[0]);
+				DEBUG_PRINTF("Je joue en %c %d - %d\n", COLUMN((int)received[0]) ,ROW((int)received[0]), (int)received[0]);	
+*/
+				choix = minMax_alphabeta(othello, received[0]);
+				DEBUG_PRINTF("Je joue en %c %d - %d\n", COLUMN(choix) ,ROW(choix), choix);
+				snprintf(received, 4, "%d\n", choix);
+
+				if ( tcp_action(config, &received, 4, SEND) <= 0 )
 					return -1;
+
+				reinit_tab(&received);
 			}
-		}while(received[0] != 'F' );
+		}while(received[1] != 'F' );
 		/* Fin transmission */
 		close(config->id_socket);
 		free(config);
@@ -110,18 +154,33 @@ int serveur(Othello *othello, int serv) {
 		QUIT_MSG("Probleme lors de la création de la socket\n");
 	}
 
-	do_pause();
 	return 1;
 }
 
 /* Converti un plateau recu en tcp en un plateau pour l'ia */
-void convert(Othello *othello, char received[66]) {
-	int i = 0;
-	for ( i = 0; i != GRID_SIZE; i++ ) {
+Othello* convert(Othello *othello, char received[66]) {
+	int i;
+	
+	othello->nb_pawn_p1 = 0;
+	othello->nb_pawn_p2 = 0;
+	memset(othello->grid, 0, sizeof(othello->grid));
+	
+	for ( i = 2; i != GRID_SIZE + 2; i++ ) {
 		if ( received[i] == PAWN_J1) ++othello->nb_pawn_p1;
 		if ( received[i] == PAWN_J2) ++othello->nb_pawn_p2;
-		
-		othello->grid[i] = received[i]; /* un memcpy aurait fait de meme mais vu que je compte le nombre de pion au passage ..... */
+		if ( received[i] == '0' )
+			received[i] = '\0';
+			
+		othello->grid[i - 2] = received[i]; /* un memcpy aurait fait de meme mais vu que je compte le nombre de pion au passage ..... */
 	}
 	
+	#if DEBUG 
+		print_othello(othello);
+	#endif
+	
+	return othello;
+}
+
+void reinit_tab(void *data) {
+	memset(data, 0, sizeof(data));
 }
