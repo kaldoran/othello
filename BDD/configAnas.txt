@@ -3,5 +3,5 @@
 # Nom:valeur
 Pseudo:Reynaud
 Mdp:tjrn
-Ip:127.0.0.1
+Ip:178.32.17.224
 Port:16384

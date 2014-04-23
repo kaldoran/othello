@@ -291,7 +291,7 @@ int move_IA_alea(Othello *othello, char player ) {
 		printf("je vais jouer en %c %d - %d\n",  COLUMN(nb_coup_possible) ,ROW(nb_coup_possible), nb_coup_possible);
 		change_value(othello, nb_coup_possible, player);
 		free(coup_possible);
-		return 1;
+		return nb_coup_possible;
 	}
 
 	printf("Je suis bloquée :'( \n");

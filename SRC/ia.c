@@ -420,6 +420,7 @@ int alphabeta_pvs(Othello *othello, char player, int depth, int alpha, int beta)
  * ou alors à l'autre joueur
  */
 int eval_grid(Othello *othello, char player, int position_jouee){
+
 	int eval, g_eval;
 
 	if(othello->iam == PAWN_J1){
