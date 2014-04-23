@@ -6,7 +6,7 @@
 #include "global.h"
 
 /* constante */
-#define DEPTH 10 /* profondeur max pour la recherche du minMax */
+#define DEPTH 7 /* profondeur max pour la recherche du minMax */
 #define WIN 100000
 
 /* Prototype de fonction */

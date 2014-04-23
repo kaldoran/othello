@@ -19,7 +19,7 @@ Othello *new_othello() {
 		free(othello);
 		QUIT_MSG("Erreur : Probleme d'allocation du tableau de l'othello");
 	}
-	
+	othello->iam = IAM;
 	/* Initialisation */
 	othello->nb_pawn_p1 = othello->nb_pawn_p2 = 2;
 
@@ -28,14 +28,14 @@ Othello *new_othello() {
 	mid = SQUARE(val, val);
 
 	/* Positionnement des pions de bases */
-	
+
 	othello->grid[mid] = PAWN_J2;
 	othello->grid[mid + 1] = PAWN_J1;
 
 	mid += W_SIDE;
 	othello->grid[mid] = PAWN_J1;
 	othello->grid[mid + 1] = PAWN_J2;
-
+	
 	return othello;
 }
 
@@ -228,10 +228,10 @@ int good_move(Othello *othello, int position, char player) {
 	 	- Diagonale de la position vers haut gauche*/
 
 	/* Diagonale en partant vers bas droite */
-	if ( (i = position) < SQUARE(0, (W_SIDE - 1)) && i % W_SIDE != W_SIDE - 1 && othello->grid[i += W_SIDE + 1] == inv_player ) {
+	if ( (i = position) < SQUARE(0, (W_SIDE - 1)) && i % W_SIDE != (W_SIDE - 1) && othello->grid[i += W_SIDE + 1] == inv_player ) {
 		for(; i < SQUARE(0, (W_SIDE - 1)) && i % W_SIDE != 7 && othello->grid[i] == inv_player; i += W_SIDE + 1) 
 			; 
-		if ( othello->grid[i] == player ) 
+		if ( othello->grid[i] == player )
 			return 1;	
 	}
 
@@ -452,10 +452,10 @@ void game(Othello *othello, char player, int nb_joueur_h) {
 	while(othello->nb_pawn_p1 > 0 && othello->nb_pawn_p2 > 0 && (othello->nb_pawn_p2 + othello->nb_pawn_p1) != GRID_SIZE && oops) {
 		if ( nb_tour % 2 == 0 ) oops = 2;
 		print_othello(othello);  /* Affichage de l'othello */
-		if ( nb_joueur_h == 2 || ( nb_joueur_h == 1 && player == 'X') ) 
+		if ( nb_joueur_h == 2 || ( nb_joueur_h == 1 && player == PAWN_J1) ) 
 			if ( ! othello_ask_choice(othello, player) )
 				oops--;		
-		if ( nb_joueur_h == 0 || ( nb_joueur_h == 1 && player == 'O') ) 
+		if ( nb_joueur_h == 0 || ( nb_joueur_h == 1 && player == PAWN_J2) ) 
 			if ( ! move_IA_minmax_alphabeta_pvs(othello, player) ) 
 				oops--;
 		player = SWITCH_PLAYER(player);

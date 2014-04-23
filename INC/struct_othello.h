@@ -12,7 +12,7 @@
 typedef struct Othello {
 	unsigned int nb_pawn_p1;
 	unsigned int nb_pawn_p2;
-
+	char iam;
 	char *grid;
 } Othello;
 

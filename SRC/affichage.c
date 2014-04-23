@@ -62,5 +62,6 @@ void choix_serv() {
 	printf("Choissez le serveur :\n");
 	printf("\t[1] - Serveur Aurélien\n");
 	printf("\t[2] - Serveur Anas hakim\n");
+	printf("\t[3] - Serveur Zombifier\n");
 	printf("\t[-1] Retour\n\n");
 }

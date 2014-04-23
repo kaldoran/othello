@@ -63,88 +63,100 @@ int serveur(Othello *othello, int serv) {
 	
 	printf("Début tcp\n");
 	if (tcp_start(config)) {
-
-		printf("User - RECEIVED %d\n", tcp_action(config, &received, sizeof(received), RECEIVED)); 
-		AFFICHE(received);
-		reinit_tab(&received);
+		if ( serv != 3 ) {
+			printf("User - RECEIVED %d\n", tcp_action(config, &received, sizeof(received), RECEIVED)); 
+			AFFICHE(received);
+			reinit_tab(&received);
+		}
 		
 		printf("\nSEND : Envoi de données Pseudo %d\n",tcp_action(config, config->pseudo, 64, SEND));
 
-		printf("Password - RECEIVED %d\n", tcp_action(config, &received, sizeof(received), RECEIVED)); 
-		AFFICHE(received);
-		reinit_tab(&received);
+		if ( serv != 3 ) {
+			printf("Password - RECEIVED %d\n", tcp_action(config, &received, sizeof(received), RECEIVED)); 
+			AFFICHE(received);
+			reinit_tab(&received);
 		
-		printf("SEND : Envoi de données Mdp : %d\n", tcp_action(config, config->password, 64, SEND));
+			printf("SEND : Envoi de données Mdp : %d\n", tcp_action(config, config->password, 64, SEND));
 
-		printf("[connect ou type] RECEIVED %d\n", tcp_action(config, &received, sizeof(received), RECEIVED));
-		AFFICHE(received);
-		reinit_tab(&received);	
+			printf("[connect ou type] RECEIVED %d\n", tcp_action(config, &received, sizeof(received), RECEIVED));
+			AFFICHE(received);
+			reinit_tab(&received);	
 		
-		if ( serv == 1 ) {
-			if (strcmp(received, "connecte") > 0)
-				return -1;
+			if ( serv == 1 ) {
+				if (strcmp(received, "connecte") > 0)
+					return -1;
 			
-			while ( (choix = tcp_action(config, &received, sizeof(received), RECEIVED)) == LG_TAB )
-				reinit_tab(&received);
+				while ( (choix = tcp_action(config, &received, sizeof(received), RECEIVED)) == LG_TAB )
+					reinit_tab(&received);
+			}
+		
+			choix_tcp();
+			#if DEBUG 
+				choix = verif_choix("Quel est votre choix ? ",4);
+			#else
+				choix = verif_choix("Quel est votre choix ? ",3);
+			#endif
+			switch (choix ) {
+				case 1:
+					printf("SEND : Envoi de données Type : %d\n",tcp_action(config, "PS\n", 3, SEND));
+					break;
+				case 2:
+					printf("SEND : Envoi de données Type : %d\n",tcp_action(config, "PS IA\n", 6, SEND));
+					break;
+				case 3:
+					printf("SEND : Envoi de données Type : %d\n",tcp_action(config, "TOURNAMENT\n", 11, SEND));
+					break;
+				#if DEBUG
+				case 4:
+					printf("SEND : Envoi de donnée type : %d\n", tcp_action(config, "TEST\n", 5, SEND));
+					break;
+				#endif
+				default:
+					return 0;
+					break;
+			}
 
+			printf("RECEIVED %d\n", tcp_action(config, &received, sizeof(received), RECEIVED)); 
+			AFFICHE(received);
+
+			if (strcmp(received, "OK"))
+				return -1;
 		}
 		
-		choix_tcp();
-		#if DEBUG 
-			choix = verif_choix("Quel est votre choix ? ",4);
-		#else
-			choix = verif_choix("Quel est votre choix ? ",3);
-		#endif
-		switch (choix ) {
-			case 1:
-				printf("SEND : Envoi de données Type : %d\n",tcp_action(config, "PS\n", 3, SEND));
-				break;
-			case 2:
-				printf("SEND : Envoi de données Type : %d\n",tcp_action(config, "PS IA\n", 6, SEND));
-				break;
-			case 3:
-				printf("SEND : Envoi de données Type : %d\n",tcp_action(config, "TOURNAMENT\n", 11, SEND));
-				break;
-			#if DEBUG
-			case 4:
-				printf("SEND : Envoi de donnée type : %d\n", tcp_action(config, "TEST\n", 5, SEND));
-				break;
-			#endif
-			default:
-				return 0;
-				break;
-		}
-
-		printf("RECEIVED %d\n", tcp_action(config, &received, sizeof(received), RECEIVED)); 
-		AFFICHE(received);
-
-		if (strcmp(received, "OK"))
-			return -1;
-
 		do{
 			choix = 0;
 			/* +1 ici pour cause, un \0 a été ajouté, ce qui fait ... 67 caracteres
 			 * Et si je ne le lis pas, je l'aurais au prochain tour de boucle 
 			 */
-			printf("RECEIVED %d\n", tcp_action(config, &received, sizeof(received) + 1, RECEIVED)); 
+			if ( serv == 1 )
+				printf("RECEIVED %d\n", tcp_action(config, &received, sizeof(received) + 1, RECEIVED));
+			else 
+				printf("RECEIVED %d\n", tcp_action(config, &received, sizeof(received), RECEIVED));
+				
 			AFFICHE(received);
-			if ( received[1] != 'F' ) {
+			
+			if ( received[1] != 'F' && received[0] != 'T' ) {
 				othello = convert(othello, received);
 				
-/*		VERSION SELON LES NORMES
-				received[0] = minMax_alphabeta(othello, received[0]);
-				DEBUG_PRINTF("Je joue en %c %d - %d\n", COLUMN((int)received[0]) ,ROW((int)received[0]), (int)received[0]);	
-*/
-				choix = minMax_alphabeta(othello, received[0]);
-				DEBUG_PRINTF("Je joue en %c %d - %d\n", COLUMN(choix) ,ROW(choix), choix);
-				snprintf(received, 4, "%d\n", choix);
-
-				if ( tcp_action(config, &received, 4, SEND) <= 0 )
-					return -1;
+/*		VERSION SELON LES NORMES 		*/
+				if ( serv == 3 ) {
+					received[0] = minMax_alphabeta(othello, received[0]);
+					DEBUG_PRINTF("Je joue en %c %d - %d - Je suis : %c\n", COLUMN((int)received[0]) ,ROW((int)received[0]), (int)received[0], othello->iam);	
+					if ( tcp_action(config, &received, 1, SEND) <= 0 )
+						return -1;
+				} 
+				else {
+					choix = minMax_alphabeta(othello, received[0]);
+					DEBUG_PRINTF("Je joue en %c %d - %d - Je suis : %c\n", COLUMN(choix) ,ROW(choix), choix, othello->iam);
+					snprintf(received, 4, "%d\n", choix);
+					
+					if ( tcp_action(config, &received, 4, SEND) <= 0 )
+						return -1;
+				}
 
 				reinit_tab(&received);
 			}
-		}while(received[1] != 'F' );
+		}while( received[1] != 'F' && received[0] != 'T' );
 		/* Fin transmission */
 		close(config->id_socket);
 		free(config);
@@ -160,7 +172,7 @@ int serveur(Othello *othello, int serv) {
 /* Converti un plateau recu en tcp en un plateau pour l'ia */
 Othello* convert(Othello *othello, char received[66]) {
 	int i;
-	
+	othello->iam = received[0];
 	othello->nb_pawn_p1 = 0;
 	othello->nb_pawn_p2 = 0;
 	memset(othello->grid, 0, sizeof(othello->grid));

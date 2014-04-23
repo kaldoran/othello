@@ -46,7 +46,7 @@ int main(int argc, char *argv[]) {
 				_clean();
 				printf("Pensez a changer les infos de BDD/config.txt avant de continuer\n");
 				choix_serv();
-				choix = verif_choix("Quel est votre choix ? ", 2);
+				choix = verif_choix("Quel est votre choix ? ", 3);
 
 				if ( choix != -1 ) 
 					if (serveur(othello, choix) == -1 ) 

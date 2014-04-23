@@ -137,9 +137,9 @@ int negamax(Othello *othello, char player, int depth){
 int eval_min (Othello *othello, char player, int depth){
 	int i, min = INT_MAX, score_other_player, move = 0;
 	if ( othello->nb_pawn_p1 == 0 )
-		return (player == PAWN_J1) ? WIN : -WIN;
+		return (othello->iam == PAWN_J1) ? -WIN : WIN;
 	else if ( othello->nb_pawn_p2 == 0 )
-		return (player == PAWN_J1) ? -WIN : WIN;
+		return (othello->iam == PAWN_J1) ? WIN : -WIN;
 		
 	Othello *copy = NULL;
 
@@ -189,9 +189,9 @@ int eval_max (Othello *othello, char player, int depth){
 	int i, max = INT_MIN, score_other_player, move = 0;
 	
 	if ( othello->nb_pawn_p1 == 0 )
-		return (player == PAWN_J1) ? -WIN : WIN;
+		return (othello->iam == PAWN_J1) ? WIN : -WIN;
 	else if ( othello->nb_pawn_p2 == 0 )
-		return (player == PAWN_J1) ? WIN : -WIN;
+		return (player == PAWN_J1) ? -WIN : WIN;
 		
 	Othello *copy = NULL;
 
@@ -410,10 +410,10 @@ int alphabeta_pvs(Othello *othello, char player, int depth, int alpha, int beta)
 
 
 
-		/* 
-		 * Fonction d'évaluation IA :
-		 * 				- eval_grid
-		 */
+/* 
+ * Fonction d'évaluation IA :
+ * 				- eval_grid
+ */
 
 /* Fonction qui évalue l'état de la grille
  * si la tendance est favorable au joueur player
@@ -422,40 +422,29 @@ int alphabeta_pvs(Othello *othello, char player, int depth, int alpha, int beta)
 int eval_grid(Othello *othello, char player, int position_jouee){
 	int eval, g_eval;
 
-	if(player == PAWN_J2){
-		if(othello->nb_pawn_p2 == 0){
-			return INT_MAX;
-		}
-
-		if(othello->nb_pawn_p1 == 0){
-			return INT_MIN;
-		}
+	if(othello->iam == PAWN_J1){
+		if(othello->nb_pawn_p2 == 0)	return INT_MAX;
+		if(othello->nb_pawn_p1 == 0)	return INT_MIN + 5;
 	}
-
 	else {
-
-		if(othello->nb_pawn_p2 == 0){
-			return INT_MIN;
-		}
-
-		if(othello->nb_pawn_p1 == 0){
-			return INT_MAX;
-		}
+		if(othello->nb_pawn_p2 == 0)	return INT_MIN + 5;
+		if(othello->nb_pawn_p1 == 0)	return INT_MAX;
 	}
 
 	if ( othello->nb_pawn_p1 + othello->nb_pawn_p2 < 35 ) {
-		if ( player == PAWN_J2 )
-			eval = 100 * ( othello->nb_pawn_p2 - othello->nb_pawn_p1);
+		if ( othello->iam == PAWN_J2 )
+			eval = 50 * ( othello->nb_pawn_p2 - othello->nb_pawn_p1);
 		else
-			eval = 100 * ( othello->nb_pawn_p1 - othello->nb_pawn_p2);
+			eval = 50 * ( othello->nb_pawn_p1 - othello->nb_pawn_p2);
 	}
 	else {
-		if ( player == PAWN_J2 )
-			eval = 50 * ( othello->nb_pawn_p1 - othello->nb_pawn_p2);
+		if ( othello->iam == PAWN_J2 )
+			eval = 100 * ( othello->nb_pawn_p1 - othello->nb_pawn_p2);
 		else
-			eval = 50 * ( othello->nb_pawn_p2 - othello->nb_pawn_p1);
+			eval = 100 * ( othello->nb_pawn_p2 - othello->nb_pawn_p1);
 	}
-     
-	g_eval = 120 * grid_eval[position_jouee];
+  
+	g_eval = 50 * grid_eval[position_jouee];
+
 	return g_eval + eval;
 }
