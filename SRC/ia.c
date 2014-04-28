@@ -305,8 +305,16 @@ int alphabeta(Othello *othello, char player, int depth, int alpha, int beta){
 
 	Othello *copy = NULL;
 
-	if(depth == 0 || (gameOver(othello) != 0))
-		return eval_grid(othello, player, bestMove);
+	if(gameOver(othello) != 0){
+		if(othello->iam == player )
+			return -WIN;
+		else 
+			return WIN;
+	}
+
+
+	if(depth == 0 )
+		return eval_grid2(othello, player, bestMove);
 
 	for(i = 0; i < GRID_SIZE; ++i){
 
@@ -424,12 +432,12 @@ int eval_grid(Othello *othello, char player, int position_jouee){
 	int eval, g_eval;
 
 	if(othello->iam == PAWN_J1){
-		if(othello->nb_pawn_p2 == 0)	return INT_MAX;
-		if(othello->nb_pawn_p1 == 0)	return INT_MIN + 5;
+		if(othello->nb_pawn_p2 == 0)	return INT_MAX - 50 ;
+		if(othello->nb_pawn_p1 == 0)	return INT_MIN + 50;
 	}
 	else {
-		if(othello->nb_pawn_p2 == 0)	return INT_MIN + 5;
-		if(othello->nb_pawn_p1 == 0)	return INT_MAX;
+		if(othello->nb_pawn_p2 == 0)	return INT_MIN + 50;
+		if(othello->nb_pawn_p1 == 0)	return INT_MAX - 50;
 	}
 
 	if ( othello->nb_pawn_p1 + othello->nb_pawn_p2 < 35 ) {
@@ -448,4 +456,62 @@ int eval_grid(Othello *othello, char player, int position_jouee){
 	g_eval = 50 * grid_eval[position_jouee];
 
 	return g_eval + eval;
+}
+
+int eval_grid2(Othello *othello, char player, int position_jouee){
+	int eval;
+
+	if(othello->iam == PAWN_J1){
+		if(othello->nb_pawn_p2 == 0)	return INT_MAX - 50 ;
+		if(othello->nb_pawn_p1 == 0)	return INT_MIN + 50;
+	}
+	else {
+		if(othello->nb_pawn_p2 == 0)	return INT_MIN + 50;
+		if(othello->nb_pawn_p1 == 0)	return INT_MAX - 50;
+	}
+
+	if(othello->nb_pawn_p1 + othello->nb_pawn_p2 < 16){
+		if ( othello->iam == PAWN_J2 )
+			eval = 50 * ( othello->nb_pawn_p2 - othello->nb_pawn_p1);
+		else
+			eval = 50 * ( othello->nb_pawn_p1 - othello->nb_pawn_p2);
+	}
+	
+	else {
+		if(16 <= othello->nb_pawn_p1 + othello->nb_pawn_p2 && othello->nb_pawn_p1 + othello->nb_pawn_p2 < 48){
+			if ( othello->iam == PAWN_J2 )
+				eval = 100 * ( othello->nb_pawn_p1 - othello->nb_pawn_p2);
+			else
+				eval = 100 * ( othello->nb_pawn_p2 - othello->nb_pawn_p1);
+				
+			eval += 50*grid_eval[position_jouee]; 
+		}
+
+		else {
+			if(othello->iam == PAWN_J2 ){
+				if(othello->nb_pawn_p2 > othello->nb_pawn_p1)
+					eval = WIN;
+				else 
+					eval = -WIN;
+			}
+
+			else{
+				if(othello->nb_pawn_p1 > othello->nb_pawn_p2)
+					eval = WIN;
+				else 
+					eval = -WIN;
+			}
+
+
+			if ( othello->iam == PAWN_J2 )
+				eval += 100 * ( othello->nb_pawn_p1 - othello->nb_pawn_p2);
+			else
+				eval += 100 * ( othello->nb_pawn_p2 - othello->nb_pawn_p1);
+		}
+	}
+
+
+
+return eval;
+
 }

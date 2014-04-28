@@ -456,7 +456,7 @@ void game(Othello *othello, char player, int nb_joueur_h) {
 			if ( ! othello_ask_choice(othello, player) )
 				oops--;		
 		if ( nb_joueur_h == 0 || ( nb_joueur_h == 1 && player == PAWN_J2) ) 
-			if ( ! move_IA_minmax_alphabeta_pvs(othello, player) ) 
+			if ( ! move_IA_minmax_alphabeta(othello, player) ) 
 				oops--;
 		player = SWITCH_PLAYER(player);
 		printf("Tour n° %d\n", nb_tour);

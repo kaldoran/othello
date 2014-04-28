@@ -15,7 +15,7 @@
 #include "struct_othello.h"
 #include "ia.h"
 
-#define IAM PAWN_J1
+#define IAM PAWN_J2
 /* Alloue la structure 
  * Ajout les pions au centre et initaliser les valeurs 
  */

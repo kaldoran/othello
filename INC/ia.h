@@ -6,7 +6,7 @@
 #include "global.h"
 
 /* constante */
-#define DEPTH 7 /* profondeur max pour la recherche du minMax */
+#define DEPTH 10 /* profondeur max pour la recherche du minMax */
 #define WIN 100000
 
 /* Prototype de fonction */
@@ -17,6 +17,7 @@ int negamax(Othello *othello, char player, int depth);
 int eval_min(Othello *othello, char player, int depth);
 int eval_max(Othello *othello, char player, int depth);
 int eval_grid(Othello *othello, char player, int move);
+int eval_grid2(Othello *othello, char player, int move);
 int alphabeta(Othello *othello, char player, int depth, int alpha, int beta);
 int minMax_alphabeta(Othello *othello, char player);
 int alphabeta_pvs(Othello *othello, char player, int depth, int alpha, int beta);
